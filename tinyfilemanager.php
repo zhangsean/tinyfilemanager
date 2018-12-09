@@ -1,90 +1,63 @@
 <?php
 //Default Configuration
-$CONFIG = '{"lang":"en","error_reporting":true,"show_hidden":true}';
-
+$CONFIG = '{"lang":"tw","error_reporting":true,"show_hidden":true}';
 /**
  * H3K | Tiny File Manager V2.2.0
  * CCP Programmers | ccpprogrammers@gmail.com
  * https://tinyfilemanager.github.io
  */
-
 // Auth with login/password (set true/false to enable/disable it)
 $use_auth = true;
-
 // Users: array('Username' => 'Password', 'Username2' => 'Password2', ...)
 // Generate secure password hash - https://tinyfilemanager.github.io/docs/pwd.html
 $auth_users = array(
     'admin' => '$2y$10$/K.hjNr84lLNDt8fTXjoI.DBp6PpeyoJ.mGwrrLuCZfAwfSAGqhOW', //admin@123
     'user' => '$2y$10$Fg6Dz8oH9fPoZ2jJan5tZuv6Z4Kp7avtQ9bDfrdRntXtPeiMAZyGO' //12345
 );
-
 // Readonly users (username array)
 $readonly_users = array(
     'user'
 );
-
 // user specific directories
 // array('Username' => 'Directory path', 'Username2' => 'Directory path', ...)
 $directories_users = array();
-
 // Enable highlight.js (https://highlightjs.org/) on view's page
 $use_highlightjs = true;
-
 // highlight.js style
 $highlightjs_style = 'vs';
-
 // Enable ace.js (https://ace.c9.io/) on view's page
 $edit_files = true;
-
 // Default timezone for date() and time() - http://php.net/manual/en/timezones.php
-$default_timezone = 'Etc/UTC'; // UTC
-
+$default_timezone = 'Asia/Taipei'; // UTC
 // Root path for file manager
 $root_path = $_SERVER['DOCUMENT_ROOT'];
-
 // Root url for links in file manager.Relative to $http_host. Variants: '', 'path/to/subfolder'
 // Will not working if $root_path will be outside of server document root
 $root_url = '';
-
 // Server hostname. Can set manually if wrong
 $http_host = $_SERVER['HTTP_HOST'];
-
 // input encoding for iconv
 $iconv_input_encoding = 'UTF-8';
-
 // date() format for file modification date
-$datetime_format = 'd.m.y H:i';
-
+$datetime_format = 'Y.m.d H:i';
 // allowed file extensions for upload and rename
 $allowed_extensions = ''; // 'gif,png,jpg'
-
 // Array of files and folders excluded from listing
 $GLOBALS['exclude_items'] = array();
-
 // Google Docs Viewer
 $GLOBALS['online_viewer'] = true;
-
-
 //Configuration
 $cfg = new FM_Config();
-
 // Default language
 $lang = isset($cfg->data['lang']) ? $cfg->data['lang'] : 'en';
-
 // Show or hide files and folders that starts with a dot
 $show_hidden_files = isset($cfg->data['show_hidden']) ? $cfg->data['show_hidden'] : true;
-
 // PHP error reporting - false = Turns off Errors, true = Turns on Errors
 $report_errors = isset($cfg->data['error_reporting']) ? $cfg->data['error_reporting'] : true;
-
 //available languages
 $lang_list = array(
-    'en' => 'English',
-    'fr' => 'Français',
-    'it' => 'Italiano',
-    'ru' => 'Russian'
+    'tw' => '繁體中文'
 );
-
 //--- EDIT BELOW CAREFULLY OR DO NOT EDIT AT ALL
 
 if ($report_errors == true) {
@@ -154,11 +127,11 @@ if ($use_auth) {
         if(function_exists('password_verify')) {
             if (isset($auth_users[$_POST['fm_usr']]) && isset($_POST['fm_pwd']) && password_verify($_POST['fm_pwd'], $auth_users[$_POST['fm_usr']])) {
                 $_SESSION['logged'] = $_POST['fm_usr'];
-                fm_set_msg('You are logged in');
+                fm_set_msg('登入成功。');
                 fm_redirect(FM_SELF_URL . '?p=');
             } else {
                 unset($_SESSION['logged']);
-                fm_set_msg('Login failed. Invalid username or password', 'error');
+                fm_set_msg('登入失敗，帳號密碼錯誤。', 'error');
                 fm_redirect(FM_SELF_URL);
             }
         } else {
@@ -175,7 +148,7 @@ if ($use_auth) {
                 <div class="row justify-content-md-center h-100">
                     <div class="card-wrapper">
                         <div class="brand">
-                            <svg version="1.0" xmlns="http://www.w3.org/2000/svg" M1008 width="100%" height="121px" viewBox="0 0 238.000000 140.000000" aria-label="H3K Tiny File Manager">
+                            <svg version="1.0" xmlns="http://www.w3.org/2000/svg" M1008 width="100%" height="121px" viewBox="0 0 238.000000 140.000000">
                                 <g transform="translate(0.000000,140.000000) scale(0.100000,-0.100000)" fill="#000000" stroke="none">
                                     <path d="M160 700 l0 -600 110 0 110 0 0 260 0 260 70 0 70 0 0 -260 0 -260 110 0 110 0 0 600 0 600 -110 0 -110 0 0 -260 0 -260 -70 0 -70 0 0 260 0 260 -110 0 -110 0 0 -600z"/>
                                     <path fill="#003500" d="M1008 1227 l-108 -72 0 -117 0 -118 110 0 110 0 0 110 0 110 70 0 70 0 0 -180 0 -180 -125 0 c-69 0 -125 -3 -125 -6 0 -3 23 -39 52 -80 l52 -74 73 0 73 0 0 -185 0 -185 -70 0 -70 0 0 115 0 115 -110 0 -110 0 0 -190 0 -190 181 0 181 0 109 73 108 72 1 181 0 181 -69 48 -68 49 68 50 69 49 0 249 0 248 -182 -1 -183 0 -107 -72z"/>
@@ -282,8 +255,8 @@ if (isset($_POST['ajax']) && !FM_READONLY) {
         $path = $_POST['path'];
         $date = date("dMy-His");
         $newFile = $file . '-' . $date . '.bak';
-        copy($path . '/' . $file, $path . '/' . $newFile) or die("Unable to backup");
-        echo "Backup $newFile Created";
+        copy($path . '/' . $file, $path . '/' . $newFile) or die("無法備份");
+        echo "備份 $newFile 已建立";
     }
 
     // Save Config
@@ -334,14 +307,14 @@ if (isset($_GET['del']) && !FM_READONLY) {
         }
         $is_dir = is_dir($path . '/' . $del);
         if (fm_rdelete($path . '/' . $del)) {
-            $msg = $is_dir ? 'Folder <b>%s</b> deleted' : 'File <b>%s</b> deleted';
+            $msg = $is_dir ? '資料夾 <b>%s</b> 已移除' : '檔案 <b>%s</b> d已移除';
             fm_set_msg(sprintf($msg, fm_enc($del)));
         } else {
-            $msg = $is_dir ? 'Folder <b>%s</b> not deleted' : 'File <b>%s</b> not deleted';
+            $msg = $is_dir ? '資料夾 <b>%s</b> 無法移除' : '檔案 <b>%s</b> 無法移除';
             fm_set_msg(sprintf($msg, fm_enc($del)), 'error');
         }
     } else {
-        fm_set_msg('Wrong file or folder name', 'error');
+        fm_set_msg('錯誤資料夾或檔案檔名。', 'error');
     }
     fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
 }
@@ -359,22 +332,22 @@ if (isset($_GET['new']) && isset($_GET['type']) && !FM_READONLY) {
         }
         if ($_GET['type'] == "file") {
             if (!file_exists($path . '/' . $new)) {
-                @fopen($path . '/' . $new, 'w') or die('Cannot open file:  ' . $new);
-                fm_set_msg(sprintf('File <b>%s</b> created', fm_enc($new)));
+                @fopen($path . '/' . $new, 'w') or die('無法開啟檔案::  ' . $new);
+                fm_set_msg(sprintf('檔案 <b>%s</b> 已建立', fm_enc($new)));
             } else {
-                fm_set_msg(sprintf('File <b>%s</b> already exists', fm_enc($new)), 'alert');
+                fm_set_msg(sprintf('檔案 <b>%s</b> 已存在', fm_enc($new)), 'alert');
             }
         } else {
             if (fm_mkdir($path . '/' . $new, false) === true) {
-                fm_set_msg(sprintf('Folder <b>%s</b> created', $new));
+                fm_set_msg(sprintf('資料夾 <b>%s</b> 已建立', $new));
             } elseif (fm_mkdir($path . '/' . $new, false) === $path . '/' . $new) {
-                fm_set_msg(sprintf('Folder <b>%s</b> already exists', fm_enc($new)), 'alert');
+                fm_set_msg(sprintf('資料夾 <b>%s</b> 已存在', fm_enc($new)), 'alert');
             } else {
-                fm_set_msg(sprintf('Folder <b>%s</b> not created', fm_enc($new)), 'error');
+                fm_set_msg(sprintf('資料夾 <b>%s</b> 無法建立', fm_enc($new)), 'error');
             }
         }
     } else {
-        fm_set_msg('Wrong folder name', 'error');
+        fm_set_msg('錯誤資料夾名稱', 'error');
     }
     fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
 }
@@ -386,7 +359,7 @@ if (isset($_GET['copy'], $_GET['finish']) && !FM_READONLY) {
     $copy = fm_clean_path($copy);
     // empty path
     if ($copy == '') {
-        fm_set_msg('Source path not defined', 'error');
+        fm_set_msg('來源路徑未被定義', 'error');
         fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
     }
     // abs path from
@@ -405,21 +378,21 @@ if (isset($_GET['copy'], $_GET['finish']) && !FM_READONLY) {
         if ($move) {
             $rename = fm_rename($from, $dest);
             if ($rename) {
-                fm_set_msg(sprintf('Moved from <b>%s</b> to <b>%s</b>', fm_enc($copy), fm_enc($msg_from)));
+                fm_set_msg(sprintf('移動檔案 <b>%s</b> 到 <b>%s</b>', fm_enc($copy), fm_enc($msg_from)));
             } elseif ($rename === null) {
-                fm_set_msg('File or folder with this path already exists', 'alert');
+                fm_set_msg('檔案或資料夾已存在', 'alert');
             } else {
-                fm_set_msg(sprintf('Error while moving from <b>%s</b> to <b>%s</b>', fm_enc($copy), fm_enc($msg_from)), 'error');
+                fm_set_msg(sprintf('無法移動檔案 <b>%s</b> 到 <b>%s</b>', fm_enc($copy), fm_enc($msg_from)), 'error');
             }
         } else {
             if (fm_rcopy($from, $dest)) {
-                fm_set_msg(sprintf('Copyied from <b>%s</b> to <b>%s</b>', fm_enc($copy), fm_enc($msg_from)));
+                fm_set_msg(sprintf('複製 <b>%s</b> 到 <b>%s</b>', fm_enc($copy), fm_enc($msg_from)));
             } else {
-                fm_set_msg(sprintf('Error while copying from <b>%s</b> to <b>%s</b>', fm_enc($copy), fm_enc($msg_from)), 'error');
+                fm_set_msg(sprintf('無法複製檔案 <b>%s</b> 到 <b>%s</b>', fm_enc($copy), fm_enc($msg_from)), 'error');
             }
         }
     } else {
-        fm_set_msg('Paths must be not equal', 'alert');
+        fm_set_msg('路徑必須不相等', 'alert');
     }
     fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
 }
@@ -438,12 +411,12 @@ if (isset($_POST['file'], $_POST['copy_to'], $_POST['finish']) && !FM_READONLY) 
         $copy_to_path .= '/' . $copy_to;
     }
     if ($path == $copy_to_path) {
-        fm_set_msg('Paths must be not equal', 'alert');
+        fm_set_msg('路徑必須不相等', 'alert');
         fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
     }
     if (!is_dir($copy_to_path)) {
         if (!fm_mkdir($copy_to_path, true)) {
-            fm_set_msg('Unable to create destination folder', 'error');
+            fm_set_msg('無法建立目標資料夾', 'error');
             fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
         }
     }
@@ -473,14 +446,14 @@ if (isset($_POST['file'], $_POST['copy_to'], $_POST['finish']) && !FM_READONLY) 
             }
         }
         if ($errors == 0) {
-            $msg = $move ? 'Selected files and folders moved' : 'Selected files and folders copied';
+            $msg = $move ? '選擇的檔案已移動' : '選擇的檔案已複製';
             fm_set_msg($msg);
         } else {
-            $msg = $move ? 'Error while moving items' : 'Error while copying items';
+            $msg = $move ? '無法移動檔案' : '無法複製檔案';
             fm_set_msg($msg, 'error');
         }
     } else {
-        fm_set_msg('Nothing selected', 'alert');
+        fm_set_msg('無選擇檔案', 'alert');
     }
     fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
 }
@@ -503,12 +476,12 @@ if (isset($_GET['ren'], $_GET['to']) && !FM_READONLY) {
     // rename
     if ($old != '' && $new != '') {
         if (fm_rename($path . '/' . $old, $path . '/' . $new)) {
-            fm_set_msg(sprintf('Renamed from <b>%s</b> to <b>%s</b>', fm_enc($old), fm_enc($new)));
+            fm_set_msg(sprintf('重新命名 <b>%s</b> 為 <b>%s</b>', fm_enc($old), fm_enc($new)));
         } else {
-            fm_set_msg(sprintf('Error while renaming from <b>%s</b> to <b>%s</b>', fm_enc($old), fm_enc($new)), 'error');
+            fm_set_msg(sprintf('無法重新命名 <b>%s</b> 為 <b>%s</b>', fm_enc($old), fm_enc($new)), 'error');
         }
     } else {
-        fm_set_msg('Names not set', 'error');
+        fm_set_msg('檔名未設置', 'error');
     }
     fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
 }
@@ -535,7 +508,7 @@ if (isset($_GET['dl'])) {
         readfile($path . '/' . $dl);
         exit;
     } else {
-        fm_set_msg('File not found', 'error');
+        fm_set_msg('找不到檔案', 'error');
         fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
     }
 }
@@ -571,9 +544,9 @@ if (!empty($_FILES) && !FM_READONLY) {
 
     if (empty($f['file']['error']) && !empty($tmp_name) && $tmp_name != 'none' && $isFileAllowed) {
         if (move_uploaded_file($tmp_name, $fullPath)) {
-            die('Successfully uploaded');
+            die('成功上傳');
         } else {
-            die(sprintf('Error while uploading files. Uploaded files: %s', $uploads));
+            die(sprintf('無法上傳檔案: %s', $uploads));
         }
     }
     exit();
@@ -598,12 +571,12 @@ if (isset($_POST['group'], $_POST['delete']) && !FM_READONLY) {
             }
         }
         if ($errors == 0) {
-            fm_set_msg('Selected files and folder deleted');
+            fm_set_msg('選擇的檔案已移除');
         } else {
-            fm_set_msg('Error while deleting items', 'error');
+            fm_set_msg('無法移除檔案', 'error');
         }
     } else {
-        fm_set_msg('Nothing selected', 'alert');
+        fm_set_msg('無選擇檔案', 'alert');
     }
 
     fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
@@ -622,7 +595,7 @@ if (isset($_POST['group']) && (isset($_POST['zip']) || isset($_POST['tar'])) && 
 
 
     if (($ext == "zip" && !class_exists('ZipArchive')) || ($ext == "tar" && !class_exists('PharData'))) {
-        fm_set_msg('Operations with archives are not available', 'error');
+        fm_set_msg('存檔操作不可用', 'error');
         fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
     }
 
@@ -649,10 +622,10 @@ if (isset($_POST['group']) && (isset($_POST['zip']) || isset($_POST['tar'])) && 
         if ($res) {
             fm_set_msg(sprintf('Archive <b>%s</b> created', fm_enc($zipname)));
         } else {
-            fm_set_msg('Archive not created', 'error');
+            fm_set_msg('存檔未建立', 'error');
         }
     } else {
-        fm_set_msg('Nothing selected', 'alert');
+        fm_set_msg('無選擇檔案', 'alert');
     }
 
     fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
@@ -675,12 +648,12 @@ if (isset($_GET['unzip']) && !FM_READONLY) {
         $ext = pathinfo($zip_path, PATHINFO_EXTENSION);
         $isValid = true;
     } else {
-        fm_set_msg('File not found', 'error');
+        fm_set_msg('找不到檔案', 'error');
     }
 
 
     if (($ext == "zip" && !class_exists('ZipArchive')) || ($ext == "tar" && !class_exists('PharData'))) {
-        fm_set_msg('Operations with archives are not available', 'error');
+        fm_set_msg('存檔操作不可用', 'error');
         fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
     }
 
@@ -703,13 +676,13 @@ if (isset($_GET['unzip']) && !FM_READONLY) {
         }
 
         if ($res) {
-            fm_set_msg('Archive unpacked');
+            fm_set_msg('檔案解壓縮');
         } else {
-            fm_set_msg('Archive not unpacked', 'error');
+            fm_set_msg('檔案無法解壓縮', 'error');
         }
 
     } else {
-        fm_set_msg('File not found', 'error');
+        fm_set_msg('找不到檔案', 'error');
     }
     fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
 }
@@ -725,7 +698,7 @@ if (isset($_POST['chmod']) && !FM_READONLY && !FM_IS_WIN) {
     $file = fm_clean_path($file);
     $file = str_replace('/', '', $file);
     if ($file == '' || (!is_file($path . '/' . $file) && !is_dir($path . '/' . $file))) {
-        fm_set_msg('File not found', 'error');
+        fm_set_msg('找不到檔案', 'error');
         fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
     }
 
@@ -759,9 +732,9 @@ if (isset($_POST['chmod']) && !FM_READONLY && !FM_IS_WIN) {
     }
 
     if (@chmod($path . '/' . $file, $mode)) {
-        fm_set_msg('Permissions changed');
+        fm_set_msg('權限變更');
     } else {
-        fm_set_msg('Permissions not changed', 'error');
+        fm_set_msg('權限無法變更', 'error');
     }
 
     fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
@@ -847,7 +820,7 @@ if (isset($_GET['upload']) && !FM_READONLY) {
                     <input type="hidden" name="p" value="<?php echo fm_enc(FM_PATH) ?>">
                     <input type="hidden" name="fullpath" id="fullpath" value="<?php echo fm_enc(FM_PATH) ?>">
                     <div class="fallback">
-                        <input name="file" type="file" multiple/>
+                        <input name="file" type="file" multiple />
                     </div>
                 </form>
             </div>
@@ -862,7 +835,7 @@ if (isset($_GET['upload']) && !FM_READONLY) {
 if (isset($_POST['copy']) && !FM_READONLY) {
     $copy_files = $_POST['file'];
     if (!is_array($copy_files) || empty($copy_files)) {
-        fm_set_msg('Nothing selected', 'alert');
+        fm_set_msg('無選擇檔案', 'alert');
         fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
     }
 
@@ -886,7 +859,7 @@ if (isset($_POST['copy']) && !FM_READONLY) {
                     <p class="break-word"><?php echo lng('Files') ?>: <b><?php echo implode('</b>, <b>', $copy_files) ?></b></p>
                     <p class="break-word"><?php echo lng('SourceFolder') ?>: <?php echo fm_enc(fm_convert_win(FM_ROOT_PATH . '/' . FM_PATH)) ?><br>
                         <label for="inp_copy_to"><?php echo lng('DestinationFolder') ?>:</label>
-                        <?php echo FM_ROOT_PATH ?>/<input type="text" name="copy_to" id="inp_copy_to" value="<?php echo fm_enc(FM_PATH) ?>">
+                        <?php echo FM_ROOT_PATH ?>/<input class="form-control" type="text" name="copy_to" id="inp_copy_to" value="<?php echo fm_enc(FM_PATH) ?>">
                     </p>
                     <p class="custom-checkbox custom-control"><input type="checkbox" name="move" value="1" id="js-move-files" class="custom-control-input"><label for="js-move-files" class="custom-control-label" style="vertical-align: sub"> <?php echo lng('Move') ?></label></p>
                     <p>
@@ -907,7 +880,7 @@ if (isset($_GET['copy']) && !isset($_GET['finish']) && !FM_READONLY) {
     $copy = $_GET['copy'];
     $copy = fm_clean_path($copy);
     if ($copy == '' || !file_exists(FM_ROOT_PATH . '/' . $copy)) {
-        fm_set_msg('File not found', 'error');
+        fm_set_msg('找不到檔案', 'error');
         fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
     }
 
@@ -915,17 +888,17 @@ if (isset($_GET['copy']) && !isset($_GET['finish']) && !FM_READONLY) {
     fm_show_nav_path(FM_PATH); // current path
     ?>
     <div class="path">
-        <p><b>Copying</b></p>
+        <p><b>複製</b></p>
         <p class="break-word">
-            Source path: <?php echo fm_enc(fm_convert_win(FM_ROOT_PATH . '/' . $copy)) ?><br>
-            Destination folder: <?php echo fm_enc(fm_convert_win(FM_ROOT_PATH . '/' . FM_PATH)) ?>
+            來源路徑: <?php echo fm_enc(fm_convert_win(FM_ROOT_PATH . '/' . $copy)) ?><br>
+            目標資料夾: <?php echo fm_enc(fm_convert_win(FM_ROOT_PATH . '/' . FM_PATH)) ?>
         </p>
         <p>
-            <b><a href="?p=<?php echo urlencode(FM_PATH) ?>&amp;copy=<?php echo urlencode($copy) ?>&amp;finish=1"><i class="fa fa-check-circle"></i> Copy</a></b> &nbsp;
-            <b><a href="?p=<?php echo urlencode(FM_PATH) ?>&amp;copy=<?php echo urlencode($copy) ?>&amp;finish=1&amp;move=1"><i class="fa fa-check-circle"></i> Move</a></b> &nbsp;
-            <b><a href="?p=<?php echo urlencode(FM_PATH) ?>"><i class="fa fa-times-circle"></i> Cancel</a></b>
+            <b><a href="?p=<?php echo urlencode(FM_PATH) ?>&amp;copy=<?php echo urlencode($copy) ?>&amp;finish=1"><i class="fa fa-check-circle"></i> 複製</a></b> &nbsp;
+            <b><a href="?p=<?php echo urlencode(FM_PATH) ?>&amp;copy=<?php echo urlencode($copy) ?>&amp;finish=1&amp;move=1"><i class="fa fa-check-circle"></i> 移動</a></b> &nbsp;
+            <b><a href="?p=<?php echo urlencode(FM_PATH) ?>"><i class="fa fa-times-circle"></i> 取消</a></b>
         </p>
-        <p><i>Select folder</i></p>
+        <p><i>選擇資料夾</i></p>
         <ul class="folders break-word">
             <?php
             if ($parent !== false) {
@@ -969,7 +942,7 @@ if (isset($_GET['settings']) && !FM_READONLY) {
                                 <?php
                                 function getSelected($l) {
                                     global $lang;
-                                    return ($lang == $l) ? 'selected' : '';
+                                    return ($lang == $l) ? '已選擇' : '';
                                 }
                                 foreach ($lang_list as $k => $v) {
                                     echo "<option value='$k' ".getSelected($k).">$v</option>";
@@ -991,28 +964,28 @@ if (isset($_GET['settings']) && !FM_READONLY) {
                     }
                     ?>
                     <div class="form-group row">
-                        <label for="js-err-rpt-1" class="col-sm-2 col-form-label">Error Reporting</label>
+                        <label for="js-err-rpt-1" class="col-sm-2 col-form-label">錯誤報告</label>
                         <div class="col-sm-10">
                             <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                 <label class="btn btn-secondary <?php echo getChecked($report_errors, 1, 'active') ?>">
-                                    <input type="radio" name="js-error-report" id="js-err-rpt-1" autocomplete="off" value="true" <?php echo getChecked($report_errors, 1, 'checked') ?> > ON
+                                    <input type="radio" name="js-error-report" id="js-err-rpt-1" autocomplete="off" value="true" <?php echo getChecked($report_errors, 1, 'checked') ?> > 開啟
                                 </label>
                                 <label class="btn btn-secondary <?php echo getChecked($report_errors, '', 'active') ?>">
-                                    <input type="radio" name="js-error-report" id="js-err-rpt-0" autocomplete="off" value="false" <?php echo getChecked($report_errors, '', 'checked') ?> > OFF
+                                    <input type="radio" name="js-error-report" id="js-err-rpt-0" autocomplete="off" value="false" <?php echo getChecked($report_errors, '', 'checked') ?> > 關閉
                                 </label>
                             </div>
                         </div>
                     </div>
 
                     <div class="form-group row">
-                        <label for="js-hdn-1" class="col-sm-2 col-form-label">Show Hidden Files</label>
+                        <label for="js-hdn-1" class="col-sm-2 col-form-label">顯示隱藏檔案</label>
                         <div class="col-sm-10">
                             <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                 <label class="btn btn-secondary <?php echo getChecked($show_hidden_files, 1, 'active') ?>">
-                                    <input type="radio" name="js-show-hidden" id="js-hdn-1" autocomplete="off" value="true" <?php echo getChecked($show_hidden_files, 1, 'checked') ?> > ON
+                                    <input type="radio" name="js-show-hidden" id="js-hdn-1" autocomplete="off" value="true" <?php echo getChecked($show_hidden_files, 1, 'checked') ?> > 開啟
                                 </label>
                                 <label class="btn btn-secondary <?php echo getChecked($show_hidden_files, '', 'active') ?>">
-                                    <input type="radio" name="js-show-hidden" id="js-hdn-0" autocomplete="off" value="false" <?php echo getChecked($show_hidden_files, '', 'checked') ?> > OFF
+                                    <input type="radio" name="js-show-hidden" id="js-hdn-0" autocomplete="off" value="false" <?php echo getChecked($show_hidden_files, '', 'checked') ?> > 關閉
                                 </label>
                             </div>
                         </div>
@@ -1032,13 +1005,13 @@ if (isset($_GET['settings']) && !FM_READONLY) {
                         <form class="form-inline" onsubmit="return new_password_hash(this)" method="POST" action="">
                             <input type="hidden" name="type" value="pwdhash" aria-label="hidden" aria-hidden="true">
                             <div class="form-group mb-2">
-                                <label for="staticEmail2">Generate new password hash</label>
+                                <label for="staticEmail2">生成加密密碼</label>
                             </div>
                             <div class="form-group mx-sm-3 mb-2">
-                                <label for="inputPassword2" class="sr-only">Password</label>
+                                <label for="inputPassword2" class="sr-only">密碼 (請謹慎保存)</label>
                                 <input type="text" class="form-control btn-sm" id="inputPassword2" name="inputPassword2" placeholder="Password">
                             </div>
-                            <button type="submit" class="btn btn-dark btn-sm mb-2">Generate</button>
+                            <button type="submit" class="btn btn-dark btn-sm mb-2">生成</button>
                         </form>
                         <textarea class="form-control" rows="2" readonly id="js-pwd-result"></textarea>
                     </div>
@@ -1077,7 +1050,7 @@ if (isset($_GET['view'])) {
     $file = fm_clean_path($file);
     $file = str_replace('/', '', $file);
     if ($file == '' || !is_file($path . '/' . $file)) {
-        fm_set_msg('File not found', 'error');
+        fm_set_msg('找不到檔案', 'error');
         fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
     }
 
@@ -1129,11 +1102,11 @@ if (isset($_GET['view'])) {
         <div class="col-12">
             <p class="break-word"><b><?php echo $view_title ?> "<?php echo fm_enc(fm_convert_win($file)) ?>"</b></p>
             <p class="break-word">
-                Full path: <?php echo fm_enc(fm_convert_win($file_path)) ?><br>
-                File
-                size: <?php echo fm_get_filesize($filesize) ?><?php if ($filesize >= 1000): ?> (<?php echo sprintf('%s bytes', $filesize) ?>)<?php endif; ?>
+                檔案完整路徑: <?php echo fm_enc(fm_convert_win($file_path)) ?><br>
+                檔案
+                大小: <?php echo fm_get_filesize($filesize) ?><?php if ($filesize >= 1000): ?> (<?php echo sprintf('%s bytes', $filesize) ?>)<?php endif; ?>
                 <br>
-                MIME-type: <?php echo $mime_type ?><br>
+                MIME-類型: <?php echo $mime_type ?><br>
                 <?php
                 // ZIP info
                 if (($is_zip || $is_gzip) && $filenames !== false) {
@@ -1157,7 +1130,7 @@ if (isset($_GET['view'])) {
                 // Image info
                 if ($is_image) {
                     $image_size = getimagesize($file_path);
-                    echo 'Image sizes: ' . (isset($image_size[0]) ? $image_size[0] : '0') . ' x ' . (isset($image_size[1]) ? $image_size[1] : '0') . '<br>';
+                    echo '相片大小: ' . (isset($image_size[0]) ? $image_size[0] : '0') . ' x ' . (isset($image_size[1]) ? $image_size[1] : '0') . '<br>';
                 }
                 // Text info
                 if ($is_text) {
@@ -1167,7 +1140,7 @@ if (isset($_GET['view'])) {
                             $content = iconv(FM_ICONV_INPUT_ENC, 'UTF-8//IGNORE', $content);
                         }
                     }
-                    echo 'Charset: ' . ($is_utf8 ? 'utf-8' : '8 bit') . '<br>';
+                    echo '字符集: ' . ($is_utf8 ? 'utf-8' : '8 bit') . '<br>';
                 }
                 ?>
             </p>
@@ -1195,7 +1168,7 @@ if (isset($_GET['view'])) {
             <?php
             if($is_onlineViewer) {
                 // Google docs viewer
-                echo '<iframe src="https://docs.google.com/viewer?embedded=true&hl=en&url=' . fm_enc($file_url) . '" frameborder="no" style="width:100%;min-height:460px"></iframe>';
+                echo '<iframe src="https://docs.google.com/viewer?embedded=true&hl=zh_tw&url=' . fm_enc($file_url) . '" frameborder="no" style="width:100%;min-height:460px"></iframe>';
             } elseif ($is_zip) {
                 // ZIP content
                 if ($filenames !== false) {
@@ -1209,7 +1182,7 @@ if (isset($_GET['view'])) {
                     }
                     echo '</code>';
                 } else {
-                    echo '<p>Error while fetching archive info</p>';
+                    echo '<p>讀取檔案時出現錯誤</p>';
                 }
             } elseif ($is_image) {
                 // Image content
@@ -1259,7 +1232,7 @@ if (isset($_GET['edit'])) {
     $file = fm_clean_path($file);
     $file = str_replace('/', '', $file);
     if ($file == '' || !is_file($path . '/' . $file)) {
-        fm_set_msg('File not found', 'error');
+        fm_set_msg('找不到檔案', 'error');
         fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
     }
 
@@ -1283,7 +1256,7 @@ if (isset($_GET['edit'])) {
         $fd = fopen($file_path, "w");
         @fwrite($fd, $writedata);
         fclose($fd);
-        fm_set_msg('File Saved Successfully', 'alert');
+        fm_set_msg('檔案成功保存', 'alert');
     }
 
     $ext = strtolower(pathinfo($file_path, PATHINFO_EXTENSION));
@@ -1304,15 +1277,14 @@ if (isset($_GET['edit'])) {
                 <div class="btn-toolbar" role="toolbar">
                     <?php if (!$isNormalEditor) { ?>
                         <div class="btn-group js-ace-toolbar">
-                            <button data-cmd="none" data-option="fullscreen" class="btn btn-sm btn-outline-secondary" id="js-ace-fullscreen" title="Fullscreen"><i class="fa fa-expand" title="Fullscreen"></i></button>
-                            <button data-cmd="find" class="btn btn-sm btn-outline-secondary" id="js-ace-search" title="Search"><i class="fa fa-search" title="Search"></i></button>
-                            <button data-cmd="undo" class="btn btn-sm btn-outline-secondary" id="js-ace-undo" title="Undo"><i class="fa fa-undo" title="Undo"></i></button>
-                            <button data-cmd="redo" class="btn btn-sm btn-outline-secondary" id="js-ace-redo" title="Redo"><i class="fa fa-repeat" title="Redo"></i></button>
+                            <button data-cmd="none" data-option="fullscreen" class="btn btn-sm btn-outline-secondary" id="js-ace-fullscreen" title="全螢幕"><i class="fa fa-expand"></i></button>
+                            <button data-cmd="find" class="btn btn-sm btn-outline-secondary" id="js-ace-search" title="搜尋"><i class="fa fa-search"></i></button>
+                            <button data-cmd="undo" class="btn btn-sm btn-outline-secondary" id="js-ace-undo" title="重做"><i class="fa fa-undo"></i></button>
+                            <button data-cmd="redo" class="btn btn-sm btn-outline-secondary" id="js-ace-redo" title="上一步"><i class="fa fa-repeat"></i></button>
                             <button data-cmd="none" data-option="wrap" class="btn btn-sm btn-outline-secondary" id="js-ace-wordWrap" title="Word Wrap"><i class="fa fa-text-width" title="Word Wrap"></i></button>
-                            <button data-cmd="goToNo" class="btn btn-sm btn-outline-secondary" id="js-ace-goLine" title="Go To Line Number"><i class="fa fa-i-cursor" title="Go To Line Number"></i></button>
-                            <button data-cmd="none" data-option="help" class="btn btn-sm btn-outline-secondary" id="js-ace-goLine" title="Help"><i class="fa fa-question" title="Help"></i></button>
-                            <select id="js-ace-mode" data-type="mode" title="Select Document Type" class="btn-outline-secondary border-left-0 d-none d-md-block"><option value="ace/mode/abap">ABAP</option><option value="ace/mode/actionscript">ActionScript</option><option value="ace/mode/ada">ADA</option><option value="ace/mode/apache_conf">Apache Conf</option><option value="ace/mode/asciidoc">AsciiDoc</option><option value="ace/mode/asl">ASL</option><option value="ace/mode/assembly_x86">Assembly x86</option><option value="ace/mode/apex">Apex</option><option value="ace/mode/batchfile">BatchFile</option><option value="ace/mode/c_cpp">C and C++</option><option value="ace/mode/clojure">Clojure</option><option value="ace/mode/cobol">Cobol</option><option value="ace/mode/coffee">CoffeeScript</option><option value="ace/mode/coldfusion">ColdFusion</option><option value="ace/mode/csharp">C#</option><option value="ace/mode/css">CSS</option><option value="ace/mode/curly">Curly</option><option value="ace/mode/d">D</option><option value="ace/mode/dart">Dart</option><option value="ace/mode/diff">Diff</option><option value="ace/mode/dockerfile">Dockerfile</option><option value="ace/mode/dot">Dot</option><option value="ace/mode/ejs">EJS</option><option value="ace/mode/erlang">Erlang</option><option value="ace/mode/fortran">Fortran</option><option value="ace/mode/fsharp">FSharp</option><option value="ace/mode/gitignore">Gitignore</option><option value="ace/mode/golang">Go</option><option value="ace/mode/graphqlschema">GraphQLSchema</option><option value="ace/mode/groovy">Groovy</option><option value="ace/mode/haml">HAML</option><option value="ace/mode/handlebars">Handlebars</option><option value="ace/mode/haskell">Haskell</option><option value="ace/mode/haskell_cabal">Haskell Cabal</option><option value="ace/mode/haxe">haXe</option><option value="ace/mode/hjson">Hjson</option><option value="ace/mode/html">HTML</option><option value="ace/mode/html_elixir">HTML (Elixir)</option><option value="ace/mode/html_ruby">HTML (Ruby)</option><option value="ace/mode/ini">INI</option><option value="ace/mode/io">Io</option><option value="ace/mode/jade">Jade</option><option value="ace/mode/java">Java</option><option value="ace/mode/javascript" selected>JavaScript</option><option value="ace/mode/json">JSON</option><option value="ace/mode/jsoniq">JSONiq</option><option value="ace/mode/jsp">JSP</option><option value="ace/mode/jsx">JSX</option><option value="ace/mode/less">LESS</option><option value="ace/mode/markdown">Markdown</option><option value="ace/mode/matlab">MATLAB</option><option value="ace/mode/mysql">MySQL</option><option value="ace/mode/objectivec">Objective-C</option><option value="ace/mode/pascal">Pascal</option><option value="ace/mode/perl">Perl</option><option value="ace/mode/perl6">Perl 6</option><option value="ace/mode/pgsql">pgSQL</option><option value="ace/mode/php_laravel_blade">PHP (Blade Template)</option><option value="ace/mode/php">PHP</option><option value="ace/mode/powershell">Powershell</option><option value="ace/mode/python">Python</option><option value="ace/mode/razor">Razor</option><option value="ace/mode/rdoc">RDoc</option><option value="ace/mode/rhtml">RHTML</option><option value="ace/mode/ruby">Ruby</option><option value="ace/mode/rust">Rust</option><option value="ace/mode/sass">SASS</option><option value="ace/mode/scad">SCAD</option><option value="ace/mode/scala">Scala</option><option value="ace/mode/scheme">Scheme</option><option value="ace/mode/scss">SCSS</option><option value="ace/mode/sh">SH</option><option value="ace/mode/sjs">SJS</option><option value="ace/mode/sql">SQL</option><option value="ace/mode/sqlserver">SQLServer</option><option value="ace/mode/stylus">Stylus</option><option value="ace/mode/svg">SVG</option><option value="ace/mode/swift">Swift</option><option value="ace/mode/terraform">Terraform</option><option value="ace/mode/tex">Tex</option><option value="ace/mode/text">Text</option><option value="ace/mode/textile">Textile</option><option value="ace/mode/toml">Toml</option><option value="ace/mode/tsx">TSX</option><option value="ace/mode/typescript">Typescript</option><option value="ace/mode/vbscript">VBScript</option><option value="ace/mode/xml">XML</option><option value="ace/mode/xquery">XQuery</option><option value="ace/mode/yaml">YAML</option><option value="ace/mode/django">Django</option></select>
-                            <select id="js-ace-theme" data-type="theme" title="Select Theme" class="btn-outline-secondary border-left-0 d-none d-lg-block"><optgroup label="Bright"><option value="ace/theme/chrome">Chrome</option><option value="ace/theme/clouds">Clouds</option><option value="ace/theme/crimson_editor">Crimson Editor</option><option value="ace/theme/dawn">Dawn</option><option value="ace/theme/dreamweaver">Dreamweaver</option><option value="ace/theme/eclipse">Eclipse</option><option value="ace/theme/github">GitHub</option><option value="ace/theme/iplastic">IPlastic</option><option value="ace/theme/solarized_light">Solarized Light</option><option value="ace/theme/textmate">TextMate</option><option value="ace/theme/tomorrow">Tomorrow</option><option value="ace/theme/xcode">XCode</option><option value="ace/theme/kuroir">Kuroir</option><option value="ace/theme/katzenmilch">KatzenMilch</option><option value="ace/theme/sqlserver">SQL Server</option></optgroup><optgroup label="Dark"><option value="ace/theme/ambiance">Ambiance</option><option value="ace/theme/chaos">Chaos</option><option value="ace/theme/clouds_midnight">Clouds Midnight</option><option value="ace/theme/dracula">Dracula</option><option value="ace/theme/cobalt">Cobalt</option><option value="ace/theme/gruvbox">Gruvbox</option><option value="ace/theme/gob">Green on Black</option><option value="ace/theme/idle_fingers">idle Fingers</option><option value="ace/theme/kr_theme">krTheme</option><option value="ace/theme/merbivore">Merbivore</option><option value="ace/theme/merbivore_soft">Merbivore Soft</option><option value="ace/theme/mono_industrial">Mono Industrial</option><option value="ace/theme/monokai">Monokai</option><option value="ace/theme/pastel_on_dark">Pastel on dark</option><option value="ace/theme/solarized_dark">Solarized Dark</option><option value="ace/theme/terminal">Terminal</option><option value="ace/theme/tomorrow_night">Tomorrow Night</option><option value="ace/theme/tomorrow_night_blue">Tomorrow Night Blue</option><option value="ace/theme/tomorrow_night_bright">Tomorrow Night Bright</option><option value="ace/theme/tomorrow_night_eighties">Tomorrow Night 80s</option><option value="ace/theme/twilight">Twilight</option><option value="ace/theme/vibrant_ink">Vibrant Ink</option></optgroup></select>
+                            <button data-cmd="goToNo" class="btn btn-sm btn-outline-secondary" id="js-ace-goLine" title="想去哪行？"><i class="fa fa-i-cursor" title="Go To Line Number"></i></button>
+                            <button data-cmd="none" data-option="help" class="btn btn-sm btn-outline-secondary" id="js-ace-goLine" title="幫助"><i class="fa fa-question"></i></button>
+                            <select id="js-ace-mode" data-type="mode" title="選擇文件類型" class="btn-outline-secondary border-left-0 d-none d-md-block"><option value="ace/mode/abap">ABAP</option><option value="ace/mode/actionscript">ActionScript</option><option value="ace/mode/ada">ADA</option><option value="ace/mode/apache_conf">Apache Conf</option><option value="ace/mode/asciidoc">AsciiDoc</option><option value="ace/mode/asl">ASL</option><option value="ace/mode/assembly_x86">Assembly x86</option><option value="ace/mode/apex">Apex</option><option value="ace/mode/batchfile">BatchFile</option><option value="ace/mode/c_cpp">C and C++</option><option value="ace/mode/clojure">Clojure</option><option value="ace/mode/cobol">Cobol</option><option value="ace/mode/coffee">CoffeeScript</option><option value="ace/mode/coldfusion">ColdFusion</option><option value="ace/mode/csharp">C#</option><option value="ace/mode/css">CSS</option><option value="ace/mode/curly">Curly</option><option value="ace/mode/d">D</option><option value="ace/mode/dart">Dart</option><option value="ace/mode/diff">Diff</option><option value="ace/mode/dockerfile">Dockerfile</option><option value="ace/mode/dot">Dot</option><option value="ace/mode/ejs">EJS</option><option value="ace/mode/erlang">Erlang</option><option value="ace/mode/fortran">Fortran</option><option value="ace/mode/fsharp">FSharp</option><option value="ace/mode/gitignore">Gitignore</option><option value="ace/mode/golang">Go</option><option value="ace/mode/graphqlschema">GraphQLSchema</option><option value="ace/mode/groovy">Groovy</option><option value="ace/mode/haml">HAML</option><option value="ace/mode/handlebars">Handlebars</option><option value="ace/mode/haskell">Haskell</option><option value="ace/mode/haskell_cabal">Haskell Cabal</option><option value="ace/mode/haxe">haXe</option><option value="ace/mode/hjson">Hjson</option><option value="ace/mode/html">HTML</option><option value="ace/mode/html_elixir">HTML (Elixir)</option><option value="ace/mode/html_ruby">HTML (Ruby)</option><option value="ace/mode/ini">INI</option><option value="ace/mode/io">Io</option><option value="ace/mode/jade">Jade</option><option value="ace/mode/java">Java</option><option value="ace/mode/javascript">JavaScript</option><option value="ace/mode/json">JSON</option><option value="ace/mode/jsoniq">JSONiq</option><option value="ace/mode/jsp">JSP</option><option value="ace/mode/jsx">JSX</option><option value="ace/mode/less">LESS</option><option value="ace/mode/markdown">Markdown</option><option value="ace/mode/matlab">MATLAB</option><option value="ace/mode/mysql">MySQL</option><option value="ace/mode/objectivec">Objective-C</option><option value="ace/mode/pascal">Pascal</option><option value="ace/mode/perl">Perl</option><option value="ace/mode/perl6">Perl 6</option><option value="ace/mode/pgsql">pgSQL</option><option value="ace/mode/php_laravel_blade" selected>PHP (Blade Template)</option><option value="ace/mode/php">PHP</option><option value="ace/mode/powershell">Powershell</option><option value="ace/mode/python">Python</option><option value="ace/mode/razor">Razor</option><option value="ace/mode/rdoc">RDoc</option><option value="ace/mode/rhtml">RHTML</option><option value="ace/mode/ruby">Ruby</option><option value="ace/mode/rust">Rust</option><option value="ace/mode/sass">SASS</option><option value="ace/mode/scad">SCAD</option><option value="ace/mode/scala">Scala</option><option value="ace/mode/scheme">Scheme</option><option value="ace/mode/scss">SCSS</option><option value="ace/mode/sh">SH</option><option value="ace/mode/sjs">SJS</option><option value="ace/mode/sql">SQL</option><option value="ace/mode/sqlserver">SQLServer</option><option value="ace/mode/stylus">Stylus</option><option value="ace/mode/svg">SVG</option><option value="ace/mode/swift">Swift</option><option value="ace/mode/terraform">Terraform</option><option value="ace/mode/tex">Tex</option><option value="ace/mode/text">Text</option><option value="ace/mode/textile">Textile</option><option value="ace/mode/toml">Toml</option><option value="ace/mode/tsx">TSX</option><option value="ace/mode/typescript">Typescript</option><option value="ace/mode/vbscript">VBScript</option><option value="ace/mode/xml">XML</option><option value="ace/mode/xquery">XQuery</option><option value="ace/mode/yaml">YAML</option><option value="ace/mode/django">Django</option></select><select id="js-ace-theme" data-type="theme" title="選擇主題" class="btn-outline-secondary border-left-0 d-none d-lg-block"><optgroup label="Bright"><option value="ace/theme/chrome">Chrome</option><option value="ace/theme/clouds">Clouds</option><option value="ace/theme/crimson_editor">Crimson Editor</option><option value="ace/theme/dawn">Dawn</option><option value="ace/theme/dreamweaver">Dreamweaver</option><option value="ace/theme/eclipse">Eclipse</option><option value="ace/theme/github">GitHub</option><option value="ace/theme/iplastic">IPlastic</option><option value="ace/theme/solarized_light">Solarized Light</option><option value="ace/theme/textmate">TextMate</option><option value="ace/theme/tomorrow">Tomorrow</option><option value="ace/theme/xcode">XCode</option><option value="ace/theme/kuroir">Kuroir</option><option value="ace/theme/katzenmilch">KatzenMilch</option><option value="ace/theme/sqlserver">SQL Server</option></optgroup><optgroup label="Dark"><option value="ace/theme/ambiance">Ambiance</option><option value="ace/theme/chaos">Chaos</option><option value="ace/theme/clouds_midnight">Clouds Midnight</option><option value="ace/theme/dracula">Dracula</option><option value="ace/theme/cobalt">Cobalt</option><option value="ace/theme/gruvbox">Gruvbox</option><option value="ace/theme/gob">Green on Black</option><option value="ace/theme/idle_fingers">idle Fingers</option><option value="ace/theme/kr_theme">krTheme</option><option value="ace/theme/merbivore">Merbivore</option><option value="ace/theme/merbivore_soft">Merbivore Soft</option><option value="ace/theme/mono_industrial">Mono Industrial</option><option value="ace/theme/monokai">Monokai</option><option value="ace/theme/pastel_on_dark">Pastel on dark</option><option value="ace/theme/solarized_dark">Solarized Dark</option><option value="ace/theme/terminal">Terminal</option><option value="ace/theme/tomorrow_night">Tomorrow Night</option><option value="ace/theme/tomorrow_night_blue">Tomorrow Night Blue</option><option value="ace/theme/tomorrow_night_bright">Tomorrow Night Bright</option><option value="ace/theme/tomorrow_night_eighties">Tomorrow Night 80s</option><option value="ace/theme/twilight">Twilight</option><option value="ace/theme/vibrant_ink">Vibrant Ink</option></optgroup></select>
                         </div>
                     <?php } ?>
                 </div>
@@ -1323,7 +1295,7 @@ if (isset($_GET['edit'])) {
                 <?php if ($is_text) { ?>
                     <?php if ($isNormalEditor) { ?>
                         <a title="Advanced" class="btn btn-sm btn-outline-primary" href="?p=<?php echo urlencode(trim(FM_PATH)) ?>&amp;edit=<?php echo urlencode($file) ?>&amp;env=ace"><i class="fa fa-pencil-square-o"></i> <?php echo lng('AdvancedEditor') ?></a>
-                        <button type="button" class="btn btn-sm btn-outline-primary name="Save" data-url="<?php echo fm_enc($file_url) ?>" onclick="edit_save(this,'nrl')"><i class="fa fa-floppy-o"></i> Save
+                        <button type="button" class="btn btn-sm btn-outline-primary name="Save" data-url="<?php echo fm_enc($file_url) ?>" onclick="edit_save(this,'nrl')"><i class="fa fa-floppy-o"></i> <?php echo lng('Save') ?>
                         </button>
                     <?php } else { ?>
                         <a title="Plain Editor" class="btn btn-sm btn-outline-primary" href="?p=<?php echo urlencode(trim(FM_PATH)) ?>&amp;edit=<?php echo urlencode($file) ?>"><i class="fa fa-text-height"></i> <?php echo lng('NormalEditor') ?></a>
@@ -1335,11 +1307,11 @@ if (isset($_GET['edit'])) {
         </div>
         <?php
         if ($is_text && $isNormalEditor) {
-            echo '<textarea class="mt-2" id="normal-editor" rows="33" cols="120" style="width: 99.5%;">' . htmlspecialchars($content) . '</textarea>';
+            echo '<textarea class="mt-2" id="normal-editor" rows="33" cols="120" style="width: 100%;">' . htmlspecialchars($content) . '</textarea>';
         } elseif ($is_text) {
             echo '<div id="editor" contenteditable="true">' . htmlspecialchars($content) . '</div>';
         } else {
-            fm_set_msg('FILE EXTENSION HAS NOT SUPPORTED', 'error');
+            fm_set_msg('不支援的檔案類型', 'error');
         }
         ?>
     </div>
@@ -1354,7 +1326,7 @@ if (isset($_GET['chmod']) && !FM_READONLY && !FM_IS_WIN) {
     $file = fm_clean_path($file);
     $file = str_replace('/', '', $file);
     if ($file == '' || (!is_file($path . '/' . $file) && !is_dir($path . '/' . $file))) {
-        fm_set_msg('File not found', 'error');
+        fm_set_msg('找不到檔案', 'error');
         fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
     }
 
@@ -1374,7 +1346,7 @@ if (isset($_GET['chmod']) && !FM_READONLY && !FM_IS_WIN) {
             </h6>
             <div class="card-body">
                 <p class="card-text">
-                    Full path: <?php echo $file_path ?><br>
+                    檔案路徑: <?php echo $file_path ?><br>
                 </p>
                 <form action="" method="post">
                     <input type="hidden" name="p" value="<?php echo fm_enc(FM_PATH) ?>">
@@ -1505,7 +1477,7 @@ $all_files_size = 0;
                         <td><?php echo $owner['name'] . ':' . $group['name'] ?></td>
                     <?php endif; ?>
                     <td class="inline-actions"><?php if (!FM_READONLY): ?>
-                            <a title="<?php echo lng('Delete')?>" href="?p=<?php echo urlencode(FM_PATH) ?>&amp;del=<?php echo urlencode($f) ?>" onclick="return confirm('Delete folder?');"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                            <a title="<?php echo lng('Delete')?>" href="?p=<?php echo urlencode(FM_PATH) ?>&amp;del=<?php echo urlencode($f) ?>" onclick="return confirm('移除資料夾？');"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                             <a title="<?php echo lng('Rename')?>" href="#" onclick="rename('<?php echo fm_enc(FM_PATH) ?>', '<?php echo fm_enc($f) ?>');return false;"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
                             <a title="<?php echo lng('CopyTo')?>..." href="?p=&amp;copy=<?php echo urlencode(trim(FM_PATH . '/' . $f, '/')) ?>"><i class="fa fa-files-o" aria-hidden="true"></i></a>
                         <?php endif; ?>
@@ -1555,7 +1527,7 @@ $all_files_size = 0;
                     <?php endif; ?>
                     <td class="inline-actions">
                         <?php if (!FM_READONLY): ?>
-                            <a title="<?php echo lng('Delete') ?>" href="?p=<?php echo urlencode(FM_PATH) ?>&amp;del=<?php echo urlencode($f) ?>" onclick="return confirm('Delete file?');"><i class="fa fa-trash-o"></i></a>
+                            <a title="<?php echo lng('Delete') ?>" href="?p=<?php echo urlencode(FM_PATH) ?>&amp;del=<?php echo urlencode($f) ?>" onclick="return confirm('移除檔案？');"><i class="fa fa-trash-o"></i></a>
                             <a title="<?php echo lng('Rename') ?>" href="#" onclick="rename('<?php echo fm_enc(FM_PATH) ?>', '<?php echo fm_enc($f) ?>');return false;"><i class="fa fa-pencil-square-o"></i></a>
                             <a title="<?php echo lng('CopyTo') ?>..."
                                href="?p=<?php echo urlencode(FM_PATH) ?>&amp;copy=<?php echo urlencode(trim(FM_PATH . '/' . $f, '/')) ?>"><i class="fa fa-files-o"></i></a>
@@ -1574,7 +1546,7 @@ $all_files_size = 0;
                 <tfoot>
                     <tr><?php if (!FM_READONLY): ?>
                             <td></td><?php endif; ?>
-                        <td colspan="<?php echo !FM_IS_WIN ? '6' : '4' ?>"><em><?php echo 'Folder is empty' ?></em></td>
+                        <td colspan="<?php echo !FM_IS_WIN ? '6' : '4' ?>"><em><?php echo '資料夾是空的！' ?></em></td>
                     </tr>
                 </tfoot>
                 <?php
@@ -1584,9 +1556,9 @@ $all_files_size = 0;
                     <tr><?php if (!FM_READONLY): ?>
                             <td class="gray"></td><?php endif; ?>
                         <td class="gray" colspan="<?php echo !FM_IS_WIN ? '6' : '4' ?>">
-                            Full size: <span title="<?php printf('%s bytes', $all_files_size) ?>"><?php echo fm_get_filesize($all_files_size) ?></span>,
-                            files: <?php echo $num_files ?>,
-                            folders: <?php echo $num_folders ?>
+                            檔案總計: <b><span title="<?php printf('%s bytes', $all_files_size) ?>"><?php echo fm_get_filesize($all_files_size) ?></span></b>,
+                            檔案數: <b><?php echo $num_files ?></b>,
+                            資料夾: <b><?php echo $num_folders ?></b>
                         </td>
                     </tr>
                 </tfoot>
@@ -1602,17 +1574,17 @@ $all_files_size = 0;
                     <li class="list-inline-item"> <a href="#/select-all" class="btn btn-small btn-outline-primary btn-2" onclick="select_all();return false;"><i class="fa fa-check-square"></i> <?php echo lng('SelectAll') ?> </a></li>
                     <li class="list-inline-item"><a href="#/unselect-all" class="btn btn-small btn-outline-primary btn-2" onclick="unselect_all();return false;"><i class="fa fa-window-close"></i> <?php echo lng('UnSelectAll') ?> </a></li>
                     <li class="list-inline-item"><a href="#/invert-all" class="btn btn-small btn-outline-primary btn-2" onclick="invert_all();return false;"><i class="fa fa-th-list"></i> <?php echo lng('InvertSelection') ?> </a></li>
-                    <li class="list-inline-item"><input type="submit" class="hidden" name="delete" id="a-delete" value="Delete" onclick="return confirm('Delete selected files and folders?')">
+                    <li class="list-inline-item"><input type="submit" class="hidden" name="delete" id="a-delete" value="Delete" onclick="return confirm('移除所選的檔案及資料夾？')">
                         <a href="javascript:document.getElementById('a-delete').click();" class="btn btn-small btn-outline-primary btn-2"><i class="fa fa-trash"></i> <?php echo lng('Delete') ?> </a></li>
-                    <li class="list-inline-item"><input type="submit" class="hidden" name="zip" id="a-zip" value="zip" onclick="return confirm('Create archive?')">
+                    <li class="list-inline-item"><input type="submit" class="hidden" name="zip" id="a-zip" value="zip" onclick="return confirm('建立檔案？')">
                         <a href="javascript:document.getElementById('a-zip').click();" class="btn btn-small btn-outline-primary btn-2"><i class="fa fa-file-archive-o"></i> <?php echo lng('Zip') ?> </a></li>
-                    <li class="list-inline-item"><input type="submit" class="hidden" name="tar" id="a-tar" value="tar" onclick="return confirm('Create archive?')">
+                    <li class="list-inline-item"><input type="submit" class="hidden" name="tar" id="a-tar" value="tar" onclick="return confirm('建立檔案？')">
                         <a href="javascript:document.getElementById('a-tar').click();" class="btn btn-small btn-outline-primary btn-2"><i class="fa fa-file-archive-o"></i> <?php echo lng('Tar') ?> </a></li>
                     <li class="list-inline-item"><input type="submit" class="hidden" name="copy" id="a-copy" value="Copy">
                         <a href="javascript:document.getElementById('a-copy').click();" class="btn btn-small btn-outline-primary btn-2"><i class="fa fa-files-o"></i> <?php echo lng('Copy') ?> </a></li>
                 </ul>
             </div>
-            <div class="col-3 d-none d-sm-block"><a href="https://tinyfilemanager.github.io" target="_blank" class="float-right" style="color:silver">Tiny File Manager v2.2</a></div>
+            <div class="col-3 d-none d-sm-block"><a href="https://tinyfilemanager.github.io" target="_blank" class="float-right" style="color:silver">檔案管理器 (zh_tw By Hi_Michael) v2.2</a></div>
 
     <?php endif; ?>
 </form>
@@ -2527,7 +2499,7 @@ function fm_show_nav_path($path)
                     <?php if (!FM_READONLY): ?>
                     <li class="nav-item mr-2">
                         <div class="input-group input-group-sm mr-1" style="margin-top:4px;">
-                            <input type="text" class="form-control" placeholder="Search" aria-label="<?php echo lng('Search') ?>" aria-describedby="search-addon2" id="search-addon">
+                            <input type="text" class="form-control" placeholder="<?php echo lng('Search') ?>" aria-label="<?php echo lng('Search') ?>" aria-describedby="search-addon2" id="search-addon">
                             <div class="input-group-append">
                                 <span class="input-group-text" id="search-addon2"><i class="fa fa-search"></i></span>
                             </div>
@@ -2594,7 +2566,7 @@ global $lang;
     <meta name="robots" content="noindex, nofollow">
     <meta name="googlebot" content="noindex">
     <link rel="icon" href="<?php echo FM_SELF_URL ?>?img=favicon" type="image/png">
-    <title>H3K | Tiny File Manager</title>
+    <title>檔案管理系統</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <style>
         body.fm-login-page{background-color:#f7f9fb;font-size:14px}
@@ -2663,7 +2635,7 @@ global $lang;
     <meta name="robots" content="noindex, nofollow">
     <meta name="googlebot" content="noindex">
     <link rel="icon" href="<?php echo FM_SELF_URL ?>?img=favicon" type="image/png">
-    <title>H3K | Tiny File Manager</title>
+    <title>檔案管理系統</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <?php if (isset($_GET['view']) && FM_USE_HIGHLIGHTJS): ?>
@@ -3076,7 +3048,7 @@ global $lang;
     function latest_release_info() {
         $.getJSON("https://api.github.com/repos/prasathmani/tinyfilemanager/releases/latest").done(function(release) {
             if(release) {
-                let _html = '<button type="button" class="btn btn-light"> Download '+ release.name +'<span class="badge badge-light"> '+release.tag_name+'</span></button>'+
+                let _html = '<button type="button" class="btn btn-light"> 下載 '+ release.name +'<span class="badge badge-light"> '+release.tag_name+'</span></button>'+
                     '<div class="btn-group" role="group" aria-label="Download latest">\n' +
                     '<a href="'+ release.zipball_url +'"target="_blank" class="btn btn-outline-secondary">Zip</a>\n' +
                     '<a href="'+ release.tarball_url +'" target="_blank" class="btn btn-outline-secondary">Tar</a></div>';
@@ -3160,8 +3132,8 @@ global $lang;
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.1/ace.js"></script>
     <script>
         var editor = ace.edit("editor");
-        editor.getSession().setMode("ace/mode/javascript");
-        //editor.setTheme("ace/theme/twilight"); //Dark Theme
+        editor.getSession().setMode("ace/mode/php_laravel_blade");
+        editor.setTheme("ace/theme/Chrome"); //Dark Theme
         function ace_commend (cmd) { editor.commands.exec(cmd, editor); }
         editor.commands.addCommands([{
             name: 'save',
@@ -3173,7 +3145,7 @@ global $lang;
             name: 'goToNo',
             bindKey: {win: 'Ctrl-G',  mac: 'Command-G'},
             exec: function(editor) {
-                let x = parseInt(prompt("Enter a Line Number [1 - "+editor.session.getLength()+"]", "1"), 10);
+                let x = parseInt(prompt("輸入行數 [1 - "+editor.session.getLength()+"]", "1"), 10);
                 editor.gotoLine(x);
             }
         }]);
@@ -3192,7 +3164,7 @@ global $lang;
                     let wrapStatus = (editor.getSession().getUseWrapMode()) ? false : true;
                     editor.getSession().setUseWrapMode(wrapStatus);
                 } else if(editorOption == "help") {
-                    alert("Editor Shortcuts\n------------------\nSave (Ctrl + S)\nFind (Ctrl + F)\nUndo (Ctrl + Z)\nRedo (Ctrl + Y)\nGo to Line (Ctrl + G)\nMore - https://github.com/ajaxorg/ace/wiki/Default-Keyboard-Shortcuts");
+                    alert("編輯快捷鈕\n------------------\n保存 (Ctrl + S)\n搜尋 (Ctrl + F)\n重做 (Ctrl + Z)\n上一步 (Ctrl + Y)\n前往指定行數 (Ctrl + G)\n更多 - https://github.com/ajaxorg/ace/wiki/Default-Keyboard-Shortcuts");
                 }
             }
         });
@@ -3262,118 +3234,38 @@ function fm_show_image($img)
 function lng($txt) {
     global $lang;
 
-    // English Language
-    $tr['en']['AppName']        = 'Tiny File Manager';      $tr['en']['AppTitle']           = 'File Manager';
-    $tr['en']['Login']          = 'Sign in';                $tr['en']['Username']           = 'Username';
-    $tr['en']['Password']       = 'Password';               $tr['en']['Logout']             = 'Sign Out';
-    $tr['en']['Move']           = 'Move';                   $tr['en']['Copy']               = 'Copy';
-    $tr['en']['Save']           = 'Save';                   $tr['en']['SelectAll']          = 'Select all';
-    $tr['en']['UnSelectAll']    = 'Unselect all';           $tr['en']['File']               = 'File';
-    $tr['en']['Back']           = 'Back';                   $tr['en']['Size']               = 'Size';
-    $tr['en']['Perms']          = 'Perms';                  $tr['en']['Modified']           = 'Modified';
-    $tr['en']['Owner']          = 'Owner';                  $tr['en']['Search']             = 'Search';
-    $tr['en']['NewItem']        = 'New Item';               $tr['en']['Folder']             = 'Folder';
-    $tr['en']['Delete']         = 'Delete';                 $tr['en']['Rename']             = 'Rename';
-    $tr['en']['CopyTo']         = 'Copy to';                $tr['en']['DirectLink']         = 'Direct link';
-    $tr['en']['UploadingFiles'] = 'Uploading files';        $tr['en']['ChangePermissions']  = 'Change Permissions';
-    $tr['en']['Copying']        = 'Copying';                $tr['en']['CreateNewItem']      = 'Create New Item';
-    $tr['en']['Name']           = 'Name';                   $tr['en']['AdvancedEditor']     = 'Advanced Editor';
-    $tr['en']['RememberMe']     = 'Remember Me';            $tr['en']['Actions']            = 'Actions';
-    $tr['en']['Upload']         = 'Upload';                 $tr['en']['Cancel']             = 'Cancel';
-    $tr['en']['InvertSelection']= 'Invert Selection';       $tr['en']['DestinationFolder']  = 'Destination Folder';
-    $tr['en']['ItemType']       = 'Item Type';              $tr['en']['ItemName']           = 'Item Name';
-    $tr['en']['CreateNow']      = 'Create Now';             $tr['en']['Download']           = 'Download';
-    $tr['en']['Open']           = 'Open';                   $tr['en']['UnZip']              = 'UnZip';
-    $tr['en']['UnZipToFolder']  = 'UnZip to folder';        $tr['en']['Edit']               = 'Edit';
-    $tr['en']['NormalEditor']   = 'Normal Editor';          $tr['en']['BackUp']             = 'Back Up';
-    $tr['en']['SourceFolder']   = 'Source Folder';          $tr['en']['Files']              = 'Files';
-    $tr['en']['Move']           = 'Move';                   $tr['en']['Change']             = 'Change';
-    $tr['en']['Settings']       = 'Settings';               $tr['en']['Language']           = 'Language';
-
-    // French Language
-    $tr['fr']['AppName']        = 'Tiny File Manager';      $tr['fr']['AppTitle']           = 'File Manager';
-    $tr['fr']['Login']          = 'Connexion';              $tr['fr']['Username']           = 'Utilisateur';
-    $tr['fr']['Password']       = 'Mot de passe';           $tr['fr']['Logout']             = 'Déconnexion';
-    $tr['fr']['Move']           = 'Déplacer';               $tr['fr']['Copy']               = 'Copier';
-    $tr['fr']['Save']           = 'Sauvegarder';            $tr['fr']['SelectAll']          = 'Tout sélectionner';
-    $tr['fr']['UnSelectAll']    = 'Tout déselectionner';    $tr['fr']['File']               = 'Fichier';
-    $tr['fr']['Back']           = 'Retour';                 $tr['fr']['Size']               = 'Taille';
-    $tr['fr']['Perms']          = 'Perms';                  $tr['fr']['Modified']           = 'Modifié le';
-    $tr['fr']['Owner']          = 'Propriétaire';           $tr['fr']['Search']             = 'Recherche';
-    $tr['fr']['NewItem']        = 'Nouvel Élément';         $tr['fr']['Folder']             = 'Dossier';
-    $tr['fr']['Delete']         = 'Supprimer';              $tr['fr']['Rename']             = 'Renommer';
-    $tr['fr']['CopyTo']         = 'Copier vers';            $tr['fr']['DirectLink']         = 'Lien direct';
-    $tr['fr']['UploadingFiles'] = 'Envoyer des fichiers';   $tr['fr']['ChangePermissions']  = 'Modifier les permissions';
-    $tr['fr']['Copying']        = 'Copier';                 $tr['fr']['CreateNewItem']      = 'Créer un nouvel élément';
-    $tr['fr']['Name']           = 'Nom';                    $tr['fr']['AdvancedEditor']     = 'Editeur avancé';
-    $tr['fr']['RememberMe']     = 'Se rappeler de moi';     $tr['fr']['Actions']            = 'Actes';
-    $tr['fr']['Upload']         = 'Envoyer';                $tr['fr']['Cancel']             = 'Annuler';
-    $tr['fr']['InvertSelection']= 'Inverser la sélection';  $tr['fr']['DestinationFolder']  = 'Dossier destination';
-    $tr['fr']['ItemType']       = 'Type d\'élement';        $tr['fr']['ItemName']           = 'Nom de l\'élément';
-    $tr['fr']['CreateNow']      = 'Créer';                  $tr['fr']['Download']           = 'Télécharger';
-    $tr['fr']['Open']           = 'Ouvrir';                 $tr['fr']['UnZip']              = 'Décompressez';
-    $tr['fr']['UnZipToFolder']  = 'Décompresser dans un dossier';$tr['fr']['Edit']          = 'Editeur';
-    $tr['fr']['NormalEditor']   = 'Éditeur Normal';         $tr['fr']['BackUp']             = 'Sauvegarder';
-    $tr['fr']['SourceFolder']   = 'Dossier Source';         $tr['fr']['Files']              = 'Fichiers';
-    $tr['fr']['Move']           = 'Déplacer';               $tr['fr']['Change']             = 'Modifier';
-    $tr['fr']['Settings']       = 'Réglages';               $tr['fr']['Language']           = 'Langue';
-
-    // Italian Language
-    $tr['it']['AppName']        = 'Tiny File Manager';      $tr['it']['AppTitle']           = 'File Manager';
-    $tr['it']['Login']          = 'Connettiti';             $tr['it']['Username']           = 'Username';
-    $tr['it']['Password']       = 'Password';               $tr['it']['Logout']             = 'Disconnettiti';
-    $tr['it']['Move']           = 'Sposta';                 $tr['it']['Copy']               = 'Copia';
-    $tr['it']['Save']           = 'Salva';                  $tr['it']['SelectAll']          = 'Seleziona tutto';
-    $tr['it']['UnSelectAll']    = 'Deseleziona tutto';      $tr['it']['File']               = 'File';
-    $tr['it']['Back']           = 'Indietro';               $tr['it']['Size']               = 'Dimensione';
-    $tr['it']['Perms']          = 'Permessi';               $tr['it']['Modified']           = 'Modificato';
-    $tr['it']['Owner']          = 'Proprietario';           $tr['it']['Search']             = 'Cerca';
-    $tr['it']['NewItem']        = 'Nuovo Elemento';         $tr['it']['Folder']             = 'Cartella';
-    $tr['it']['Delete']         = 'Elimina';                $tr['it']['Rename']             = 'Rinomina';
-    $tr['it']['CopyTo']         = 'Copia su';               $tr['it']['DirectLink']         = 'Link diretto';
-    $tr['it']['UploadingFiles'] = 'Caricamento file';       $tr['it']['ChangePermissions']  = 'Modifica Permessi';
-    $tr['it']['Copying']        = 'Copia in corso';         $tr['it']['CreateNewItem']      = 'Crea Nuovo Elemento';
-    $tr['it']['Name']           = 'Nome';                   $tr['it']['AdvancedEditor']     = 'Editor Avanzato';
-    $tr['it']['RememberMe']     = 'Ricordami';              $tr['it']['Actions']            = 'Azioni';
-    $tr['it']['Upload']         = 'Carica';                 $tr['it']['Cancel']             = 'Annulla';
-    $tr['it']['InvertSelection']= 'Inverti Selezione';      $tr['it']['DestinationFolder']  = 'Cartella di Destinazione';
-    $tr['it']['ItemType']       = 'Tipo Elemento';          $tr['it']['ItemName']           = 'Nome Elemento';
-    $tr['it']['CreateNow']      = 'Crea Adesso';            $tr['it']['Download']           = 'Scarica';
-    $tr['it']['Open']           = 'Apri';                   $tr['it']['UnZip']              = 'Decomprimi';
-    $tr['it']['UnZipToFolder']  = 'Decomprimi su cartella'; $tr['it']['Edit']               = 'Modifica';
-    $tr['it']['NormalEditor']   = 'Editor Normale';         $tr['it']['BackUp']             = 'Back-Up';
-    $tr['it']['SourceFolder']   = 'Cartella di Origine';    $tr['it']['Files']              = 'File';
-    $tr['it']['Move']           = 'Sposta';                 $tr['it']['Change']             = 'Cambia';
-    $tr['it']['Settings']       = 'Impostazioni';           $tr['it']['Language']           = 'Lingua';
-
-    // Russian Language
-    $tr['ru']['AppName']        = 'Файловый менеджер';            $tr['ru']['AppTitle']           = 'Файловый менеджер';
-    $tr['ru']['Login']          = 'Войти';                        $tr['ru']['Username']           = 'Пользователь';
-    $tr['ru']['Password']       = 'Пароль';                       $tr['ru']['Logout']             = 'Выйти';
-    $tr['ru']['Move']           = 'Переместить';                  $tr['ru']['Copy']               = 'Копировать';
-    $tr['ru']['Save']           = 'Сохранить';                    $tr['ru']['SelectAll']          = 'Выбрать всё';
-    $tr['ru']['UnSelectAll']    = 'Отменить выбор';               $tr['ru']['File']               = 'Файл';
-    $tr['ru']['Back']           = 'Вернуться';                    $tr['ru']['Size']               = 'Размер';
-    $tr['ru']['Perms']          = 'Права доступа';                $tr['ru']['Modified']           = 'Обновление';
-    $tr['ru']['Owner']          = 'Создатель';                    $tr['ru']['Search']             = 'Поиск';
-    $tr['ru']['NewItem']        = 'Создать';                      $tr['ru']['Folder']             = 'Папка';
-    $tr['ru']['Delete']         = 'Удалить';                      $tr['ru']['Rename']             = 'Переименовать';
-    $tr['ru']['CopyTo']         = 'Скопировать в';                $tr['ru']['DirectLink']         = 'Ссылка';
-    $tr['ru']['UploadingFiles'] = 'Загрузка файлов';              $tr['ru']['ChangePermissions']  = 'Изменить права';
-    $tr['ru']['Copying']        = 'Копировать';                   $tr['ru']['CreateNewItem']      = 'Создать новый';
-    $tr['ru']['Name']           = 'Имя';                          $tr['ru']['AdvancedEditor']     = 'Улучшеный редактор';
-    $tr['ru']['RememberMe']     = 'Запомнить меня';               $tr['ru']['Actions']            = 'Действия';
-    $tr['ru']['Upload']         = 'Загрузить';                    $tr['ru']['Cancel']             = 'Отмена';
-    $tr['ru']['InvertSelection']= 'Обратная выборка';             $tr['ru']['DestinationFolder']  = 'Папка назначения';
-    $tr['ru']['ItemType']       = 'Тип элемента';                 $tr['ru']['ItemName']           = 'Имя элемента';
-    $tr['ru']['CreateNow']      = 'Создать сейчас';               $tr['ru']['Download']           = 'Загрузка';
-    $tr['ru']['Open']           = 'Открыть';                      $tr['ru']['UnZip']              = 'Разархивировать';
-    $tr['ru']['UnZipToFolder']  = 'Разархивировать в папку';      $tr['ru']['Edit']               = 'Редактировать';
-    $tr['ru']['NormalEditor']   = 'Стандартный редактор';         $tr['ru']['BackUp']             = 'Back Up';
-    $tr['ru']['SourceFolder']   = 'Путь папки';                   $tr['ru']['Files']              = 'Файлы';
-    $tr['ru']['Move']           = 'Переместить';                  $tr['ru']['Change']             = 'Изменения';
-    $tr['ru']['Settings']       = 'Свойства';                     $tr['ru']['Language']           = 'Язык';
-
+    // Chinese Language
+    $tr['tw']['AppName']        = '檔案管理器';        $tr['tw']['AppTitle']           = '檔案管理器';
+    $tr['tw']['Login']          = '登入';              $tr['tw']['Username']           = '帳號';
+    $tr['tw']['Password']       = '密碼';              $tr['tw']['Logout']             = '登出';
+    $tr['tw']['Move']           = '移動';              $tr['tw']['Copy']               = '複製';
+    $tr['tw']['Save']           = '保存';              $tr['tw']['SelectAll']          = '選擇全部';
+    $tr['tw']['UnSelectAll']    = '取消選擇全部';      $tr['tw']['File']               = '檔案';
+    $tr['tw']['Back']           = '返回';              $tr['tw']['Size']               = '大小';
+    $tr['tw']['Perms']          = '權限';              $tr['tw']['Modified']           = '修改時間';
+    $tr['tw']['Owner']          = '擁有者';            $tr['tw']['Search']             = '搜尋';
+    $tr['tw']['NewItem']        = '新檔案';            $tr['tw']['Folder']             = '資料夾';
+    $tr['tw']['Delete']         = '移除';              $tr['tw']['Rtwame']             = 'Rtwame';
+    $tr['tw']['CopyTo']         = '複製到';            $tr['tw']['DirectLink']         = '直接連結';
+    $tr['tw']['UploadingFiles'] = '上傳檔案';          $tr['tw']['ChangePermissions']  = '變更權限';
+    $tr['tw']['Copying']        = '複製';              $tr['tw']['CreateNewItem']      = '建立新檔案';
+    $tr['tw']['Name']           = '檔名';              $tr['tw']['AdvancedEditor']     = '進階編輯';
+    $tr['tw']['RememberMe']     = '記住我';            $tr['tw']['Actions']            = '動作';
+    $tr['tw']['Upload']         = '上傳';              $tr['tw']['Cancel']             = '取消';
+    $tr['tw']['InvertSelection']= '選擇反轉';          $tr['tw']['DestinationFolder']  = '目標資料夾';
+    $tr['tw']['ItemType']       = '檔案類型';          $tr['tw']['ItemName']           = '檔案檔名';
+    $tr['tw']['CreateNow']      = '建立';              $tr['tw']['Download']           = '下載';
+    $tr['tw']['Optw']           = 'Optw';              $tr['tw']['UnZip']              = '解壓縮';
+    $tr['tw']['UnZipToFolder']  = '解壓縮至資料夾';    $tr['tw']['Edit']               = '編輯';
+    $tr['tw']['NormalEditor']   = '普通編輯';          $tr['tw']['BackUp']             = '上傳';
+    $tr['tw']['SourceFolder']   = '來源資料夾';        $tr['tw']['Files']              = '檔案';
+    $tr['tw']['Move']           = '移動';              $tr['tw']['Change']             = '變更';
+    $tr['tw']['Settings']       = '設定';              $tr['tw']['Language']           = '語言';
+    $tr['tw']['Open']           = '開啟';              $tr['tw']['Group']              = '群組';
+    $tr['tw']['Other']          = '其他';              $tr['tw']['Read']               = '讀取';
+    $tr['tw']['Write']          = '寫入';              $tr['tw']['Execute']            = '執行';
+    $tr['tw']['Rename']         = '重新命名';
+    
     if (!strlen($lang)) $lang = 'en';
     if (isset($tr[$lang][$txt])) return fm_enc($tr[$lang][$txt]);
     else if (isset($tr['en'][$txt])) return fm_enc($tr['en'][$txt]);
