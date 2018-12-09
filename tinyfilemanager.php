@@ -16,7 +16,8 @@ $auth_users = array(
 );
 // Readonly users (username array)
 $readonly_users = array(
-    'user'
+    'user',
+    'admin'
 );
 // user specific directories
 // array('Username' => 'Directory path', 'Username2' => 'Directory path', ...)
@@ -30,10 +31,10 @@ $edit_files = true;
 // Default timezone for date() and time() - http://php.net/manual/en/timezones.php
 $default_timezone = 'Asia/Taipei'; // UTC
 // Root path for file manager
-$root_path = $_SERVER['DOCUMENT_ROOT'];
+$root_path = 'files/';
 // Root url for links in file manager.Relative to $http_host. Variants: '', 'path/to/subfolder'
 // Will not working if $root_path will be outside of server document root
-$root_url = '';
+$root_url = 'files/';
 // Server hostname. Can set manually if wrong
 $http_host = $_SERVER['HTTP_HOST'];
 // input encoding for iconv
@@ -968,10 +969,10 @@ if (isset($_GET['settings']) && !FM_READONLY) {
                         <div class="col-sm-10">
                             <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                 <label class="btn btn-secondary <?php echo getChecked($report_errors, 1, 'active') ?>">
-                                    <input type="radio" name="js-error-report" id="js-err-rpt-1" autocomplete="off" value="true" <?php echo getChecked($report_errors, 1, 'checked') ?> > 開啟
+                                    <input type="radio" name="js-error-report" id="js-err-rpt-1" autocomplete="off" value="true" <?php echo getChecked($report_errors, 1, 'checked') ?> > <?php echo lng('enable'); ?>
                                 </label>
                                 <label class="btn btn-secondary <?php echo getChecked($report_errors, '', 'active') ?>">
-                                    <input type="radio" name="js-error-report" id="js-err-rpt-0" autocomplete="off" value="false" <?php echo getChecked($report_errors, '', 'checked') ?> > 關閉
+                                    <input type="radio" name="js-error-report" id="js-err-rpt-0" autocomplete="off" value="false" <?php echo getChecked($report_errors, '', 'checked') ?> > <?php echo lng('disable'); ?>
                                 </label>
                             </div>
                         </div>
@@ -982,10 +983,10 @@ if (isset($_GET['settings']) && !FM_READONLY) {
                         <div class="col-sm-10">
                             <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                 <label class="btn btn-secondary <?php echo getChecked($show_hidden_files, 1, 'active') ?>">
-                                    <input type="radio" name="js-show-hidden" id="js-hdn-1" autocomplete="off" value="true" <?php echo getChecked($show_hidden_files, 1, 'checked') ?> > 開啟
+                                    <input type="radio" name="js-show-hidden" id="js-hdn-1" autocomplete="off" value="true" <?php echo getChecked($show_hidden_files, 1, 'checked') ?> > <?php echo lng('enable'); ?>
                                 </label>
                                 <label class="btn btn-secondary <?php echo getChecked($show_hidden_files, '', 'active') ?>">
-                                    <input type="radio" name="js-show-hidden" id="js-hdn-0" autocomplete="off" value="false" <?php echo getChecked($show_hidden_files, '', 'checked') ?> > 關閉
+                                    <input type="radio" name="js-show-hidden" id="js-hdn-0" autocomplete="off" value="false" <?php echo getChecked($show_hidden_files, '', 'checked') ?> > <?php echo lng('disable'); ?>
                                 </label>
                             </div>
                         </div>
@@ -1009,7 +1010,7 @@ if (isset($_GET['settings']) && !FM_READONLY) {
                             </div>
                             <div class="form-group mx-sm-3 mb-2">
                                 <label for="inputPassword2" class="sr-only">密碼 (請謹慎保存)</label>
-                                <input type="text" class="form-control btn-sm" id="inputPassword2" name="inputPassword2" placeholder="Password">
+                                <input type="text" class="form-control btn-sm" id="inputPassword2" name="inputPassword2" placeholder="密碼">
                             </div>
                             <button type="submit" class="btn btn-dark btn-sm mb-2">生成</button>
                         </form>
@@ -1020,15 +1021,15 @@ if (isset($_GET['settings']) && !FM_READONLY) {
                 <div class="row">
                     <div class="col-xs-12 col-sm-6">
                         <p><h3><a href="https://github.com/prasathmani/tinyfilemanager" target="_blank" class="app-v-title"> Tiny File Manager V2.2</a></h3></p>
-                        <p>Author: Prasath Mani</p>
-                        <p>Mail Us: <a href="mailto:ccpprogrammers@gmail.com">ccpprogrammers@gmail.com</a> </p>
+                        <p>作者: Prasath Mani</p>
+                        <p>電子郵件: <a href="mailto:ccpprogrammers@gmail.com">ccpprogrammers@gmail.com</a> </p>
                     </div>
                     <div class="col-xs-12 col-sm-6">
                         <div class="card">
                             <ul class="list-group list-group-flush">
-                                <li class="list-group-item"><a href="https://tinyfilemanager.github.io/" target="_blank"><i class="fa fa-question-circle"></i> Help Documents</a> </li>
-                                <li class="list-group-item"><a href="https://github.com/prasathmani/tinyfilemanager/issues" target="_blank"><i class="fa fa-bug"></i> Report Issue</a></li>
-                                <li class="list-group-item"><a href="javascript:latest_release_info();" target="_blank"><i class="fa fa-link"></i> Get Latest Release</a></li>
+                                <li class="list-group-item"><a href="https://tinyfilemanager.github.io/" target="_blank"><i class="fa fa-question-circle"></i> 幫助文件</a> </li>
+                                <li class="list-group-item"><a href="https://github.com/prasathmani/tinyfilemanager/issues" target="_blank"><i class="fa fa-bug"></i> 回報問題</a></li>
+                                <li class="list-group-item"><a href="javascript:latest_release_info();" target="_blank"><i class="fa fa-link"></i> 取得最新釋出</a></li>
                             </ul>
                         </div>
                     </div>
@@ -3264,7 +3265,8 @@ function lng($txt) {
     $tr['tw']['Open']           = '開啟';              $tr['tw']['Group']              = '群組';
     $tr['tw']['Other']          = '其他';              $tr['tw']['Read']               = '讀取';
     $tr['tw']['Write']          = '寫入';              $tr['tw']['Execute']            = '執行';
-    $tr['tw']['Rename']         = '重新命名';
+    $tr['tw']['Rename']         = '重新命名';          $tr['tw']['enable']             = '開啟';
+    $tr['tw']['disable']        = '關閉';
     
     if (!strlen($lang)) $lang = 'en';
     if (isset($tr[$lang][$txt])) return fm_enc($tr[$lang][$txt]);
