@@ -81,4 +81,4 @@ To enable/disable authentication set `$use_auth` to true or false.
 [![Beerpay](https://beerpay.io/prasathmani/tinyfilemanager/badge.svg?style=flat-square)](https://beerpay.io/prasathmani/tinyfilemanager)
 
 
-
+[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
