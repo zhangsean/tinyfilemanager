@@ -1,0 +1,6 @@
+{
+  "name": "tinyfilemanager: PHP app for heroku",
+  "description": "tinyfilemanager php app for heroku https://github.com/prasathmani/tinyfilemanager",
+  "repository": "https://github.com/mdimtiaj/tinyfilemanager",
+  "addons": []
+}
