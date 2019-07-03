@@ -86,7 +86,7 @@ $datetime_format = 'd.m.y H:i';
 
 // allowed file extensions for upload and rename
 // e.g. 'gif,png,jpg'
-$allowed_extensions = ''; 
+$allowed_extensions = '';
 
 // Favicon path. This can be either a full url to an .PNG image, or a path based on the document root.
 // full path, e.g http://example.com/favicon.png
@@ -178,7 +178,8 @@ $is_https = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' || $_SERVER['
 
 // update $root_url based on user specific directories
 if (isset($_SESSION[FM_SESSION_ID]['logged']) && !empty($directories_users[$_SESSION[FM_SESSION_ID]['logged']])) {
-    $wd = fm_clean_path(dirname($_SERVER['PHP_SELF']));
+    // $wd = fm_clean_path(dirname($_SERVER['PHP_SELF']));
+    $wd = fm_clean_path(dirname($_SERVER['SCRIPT_NAME']));
     $root_url =  $root_url.$wd.DIRECTORY_SEPARATOR.$directories_users[$_SESSION[FM_SESSION_ID]['logged']];
 }
 // clean $root_url
@@ -186,7 +187,8 @@ $root_url = fm_clean_path($root_url);
 
 // abs path for site
 defined('FM_ROOT_URL') || define('FM_ROOT_URL', ($is_https ? 'https' : 'http') . '://' . $http_host . (!empty($root_url) ? '/' . $root_url : ''));
-defined('FM_SELF_URL') || define('FM_SELF_URL', ($is_https ? 'https' : 'http') . '://' . $http_host . $_SERVER['PHP_SELF']);
+// defined('FM_SELF_URL') || define('FM_SELF_URL', ($is_https ? 'https' : 'http') . '://' . $http_host . $_SERVER['PHP_SELF']);
+defined('FM_SELF_URL') || define('FM_SELF_URL', ($is_https ? 'https' : 'http') . '://' . $http_host . $_SERVER['SCRIPT_NAME']);
 
 // logout
 if (isset($_GET['logout'])) {
@@ -991,7 +993,7 @@ if (isset($_GET['upload']) && !FM_READONLY) {
                     <?php echo lng('DestinationFolder') ?>: <?php echo fm_enc(fm_convert_win(FM_ROOT_PATH . '/' . FM_PATH)) ?>
                 </p>
 
-                <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?p=' . fm_enc(FM_PATH) ?>" class="dropzone card-tabs-container" id="fileUploader" enctype="multipart/form-data">
+                <form action="<?php echo htmlspecialchars($_SERVER["SCRIPT_NAME"]) . '?p=' . fm_enc(FM_PATH) ?>" class="dropzone card-tabs-container" id="fileUploader" enctype="multipart/form-data">
                     <input type="hidden" name="p" value="<?php echo fm_enc(FM_PATH) ?>">
                     <input type="hidden" name="fullpath" id="fullpath" value="<?php echo fm_enc(FM_PATH) ?>">
                     <div class="fallback">
@@ -2753,7 +2755,7 @@ class FM_Zipper_Tar
     function __construct()
     {
         global $root_path, $root_url, $CONFIG;
-        $fm_url = $root_url.$_SERVER["PHP_SELF"];
+        $fm_url = $root_url.$_SERVER["SCRIPT_NAME"];
         $this->data = array(
             'lang' => 'en',
             'error_reporting' => true,
@@ -2779,7 +2781,7 @@ class FM_Zipper_Tar
     function save()
     {
         global $root_path;
-        $fm_file = $root_path.$_SERVER["PHP_SELF"];
+        $fm_file = $root_path.$_SERVER["SCRIPT_NAME"];
         $var_name = '$CONFIG';
         $var_value = var_export(json_encode($this->data), true);
         $config_string = "<?php" . chr(13) . chr(10) . "//Default Configuration".chr(13) . chr(10)."$var_name = $var_value;" . chr(13) . chr(10);
