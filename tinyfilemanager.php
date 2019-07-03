@@ -1,4 +1,27 @@
 <?php
+
+// Users: array('Username' => 'Password', 'Username2' => 'Password2', ...)
+// Generate secure password hash - https://tinyfilemanager.github.io/docs/pwd.html
+$auth_users = array(
+    'admin' => '$2y$10$/K.hjNr84lLNDt8fTXjoI.DBp6PpeyoJ.mGwrrLuCZfAwfSAGqhOW', //admin@123
+    'user' =>  password_hash('12345', PASSWORD_DEFAULT), //12345
+    // more users
+);
+
+// Readonly users (username array)
+$readonly_users = array(
+    'user'
+);
+
+// user specific directories
+// array('Username' => 'Directory path', 'Username2' => 'Directory path', ...)
+$directories_users = array(
+  // 'admin' => 'somePath'
+);
+
+?>
+
+<?php
 //Default Configuration
 $CONFIG = '{"lang":"en","error_reporting":false,"show_hidden":false}';
 
@@ -18,17 +41,8 @@ define('APP_TITLE', 'Tiny File Manager');
 // Is independent from IP white- and blacklisting
 $use_auth = true;
 
-// Users: array('Username' => 'Password', 'Username2' => 'Password2', ...)
-// Generate secure password hash - https://tinyfilemanager.github.io/docs/pwd.html
-$auth_users = array(
-    'admin' => '$2y$10$/K.hjNr84lLNDt8fTXjoI.DBp6PpeyoJ.mGwrrLuCZfAwfSAGqhOW', //admin@123
-    'user' => '$2y$10$Fg6Dz8oH9fPoZ2jJan5tZuv6Z4Kp7avtQ9bDfrdRntXtPeiMAZyGO' //12345
-);
 
-// Readonly users (username array)
-$readonly_users = array(
-    'user'
-);
+
 
 // Possible rules are 'OFF', 'AND' or 'OR'
 // OFF => Don't check connection IP, defaults to OFF
@@ -50,10 +64,6 @@ $ip_blacklist = array(
     '0.0.0.0',      // non-routable meta ipv4
     '::'            // non-routable meta ipv6
 );
-
-// user specific directories
-// array('Username' => 'Directory path', 'Username2' => 'Directory path', ...)
-$directories_users = array();
 
 // Enable highlight.js (https://highlightjs.org/) on view's page
 $use_highlightjs = true;
