@@ -4,17 +4,11 @@ $passWord = "admin";
 //Default Configuration
 $CONFIG = '{"lang":"en","error_reporting":false,"show_hidden":false,"hide_Cols":false,"calc_folder":false}';
 
-/**
- * H3K | Tiny File Manager V2.3.8
- * CCP Programmers | ccpprogrammers@gmail.com
- * https://tinyfilemanager.github.io
- */
-
 //TFM version
 define('VERSION', '2.3.8');
 
 //Application Title
-define('APP_TITLE', 'Tiny File Manager');
+define('APP_TITLE', 'RPi File Manager');
 
 // Auth with login/password (set true/false to enable/disable it)
 // Is independent from IP white- and blacklisting
