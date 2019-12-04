@@ -87,7 +87,7 @@ $allowed_extensions = '';
 // Favicon path. This can be either a full url to an .PNG image, or a path based on the document root.
 // full path, e.g http://example.com/favicon.png
 // local path, e.g images/icons/favicon.png
-$favicon_path = '?img=favicon';
+$favicon_path = 'icon.png';
 
 // Array of files and folders excluded from listing
 // e.r array('myfile.html', 'personal-folder')
