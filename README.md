@@ -8,6 +8,14 @@
 
 > TinyFileManager is web based file manager and it is a simple, fast and small file manager with a single file, multi-language ready web application for storing, uploading, editing and managing files and folders online via web browser. The Application runs on PHP 5.5+, It allows the creation of multiple users and each user can have its own directory and a build-in support for managing text files with cloud9 IDE and it supports syntax highlighting for over 150+ languages and over 35+ themes.
 
+
+
+## 中国大陆适用版
+
+基于 2.4.6 修改的中国大陆适用版，主要把 js/css 库更换为国内 CDN；修复了文件大小排序，时间排序，上一层栏会被排序的 Bug。
+
+
+
 ## Demo
 
 [Demo](https://tinyfilemanager.github.io/demo/)

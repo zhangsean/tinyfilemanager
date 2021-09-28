@@ -3937,17 +3937,13 @@ $isStickyNavBar = $sticky_navbar ? 'navbar-fixed' : 'navbar-normal';
         var $table = $('#main-table'),
             tableLng = $table.find('th').length,
             _targets = (tableLng && tableLng == 7 ) ? [0, 4,5,6] : tableLng == 5 ? [0,4] : [3];
-
-            var $tr = $('#main-table tr.nosort'); //get the reference of row with the class no-sort
-            var mySpecialRow = $tr.prop('outerHTML'); //get html code of tr
-            $tr.remove(); //remove row of table
-
+            var $tr = $('#main-table tr.nosort');
+            var mySpecialRow = $tr.prop('outerHTML');
+            $tr.remove();
             mainTable = $('#main-table').DataTable({"paging": false, "info": false, "order": [], "columnDefs": [{"targets": _targets, "orderable": false}], "fnDrawCallback": function(){
-                //add the row with 'prepend' method: in the first children of TBODY
-                $('#main-table tbody').prepend(mySpecialRow);
+                    $('#main-table tbody').prepend(mySpecialRow);
                 }
         });
-
         //search
         $('#search-addon').on( 'keyup', function () {
             mainTable.search( this.value ).draw();
