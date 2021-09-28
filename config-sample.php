@@ -2,7 +2,7 @@
 
 /*
 #################################################################################################################
-This is an OPTIONAL configuration file. rename this file into config.php to use this configuration 
+This is an OPTIONAL configuration file. rename this file into config.php to use this configuration
 The role of this file is to make updating of "tinyfilemanager.php" easier.
 So you can:
 -Feel free to remove completely this file and configure "tinyfilemanager.php" as a single file application.
@@ -42,7 +42,7 @@ $edit_files = true;
 
 // Default timezone for date() and time()
 // Doc - http://php.net/manual/en/timezones.php
-$default_timezone = 'Etc/UTC'; // UTC
+$default_timezone = 'Asia/Shanghai'; // UTC
 
 // Root path for file manager
 // use absolute path of directory i.e: '/var/www/folder' or $_SERVER['DOCUMENT_ROOT'].'/folder'
@@ -64,7 +64,7 @@ $iconv_input_encoding = 'UTF-8';
 
 // date() format for file modification date
 // Doc - https://www.php.net/manual/en/datetime.format.php
-$datetime_format = 'd.m.y H:i:s';
+$datetime_format = 'y.m.d H:i';
 
 // Allowed file extensions for create and rename files
 // e.g. 'txt,html,css,js'
