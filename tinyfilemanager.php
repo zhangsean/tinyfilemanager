@@ -403,7 +403,7 @@ unset($p, $use_auth, $iconv_input_encoding, $use_highlightjs, $highlightjs_style
 /*************************** ACTIONS ***************************/
 
 // AJAX Request
-if (isset($_POST['ajax']) && !FM_READONLY) {
+if (isset($_POST['ajax'])) {
 
     // save
     if (isset($_POST['type']) && $_POST['type'] == "save") {
@@ -1479,7 +1479,7 @@ if (isset($_GET['help'])) {
             <div class="card-body">
                 <div class="row">
                     <div class="col-xs-12 col-sm-6">
-                        <p><h3><a href="https://github.com/prasathmani/tinyfilemanager" target="_blank" class="app-v-title"> Tiny File Manager <?php echo VERSION; ?></a></h3></p>
+                        <p><h3><a href="https://github.com/rampageX/tinyfilemanager" target="_blank" class="app-v-title"> Tiny File Manager <?php echo VERSION; ?></a></h3></p>
                         <p>Author: Prasath Mani</p>
                         <p>Mail Us: <a href="mailto:ccpprogrammers@gmail.com">ccpprogrammers[at]gmail.com</a> </p>
                     </div>
@@ -3551,6 +3551,7 @@ $isStickyNavBar = $sticky_navbar ? 'navbar-fixed' : 'navbar-normal';
     <style>
         body { font-size:14px;color:#222;background:#F7F7F7; }
         body.navbar-fixed { margin-top:55px; }
+        a { color:#000;}
         a:hover, a:visited, a:focus { text-decoration:none !important; }
         * { -webkit-border-radius:0 !important;-moz-border-radius:0 !important;border-radius:0 !important; }
         .filename, td, th { white-space:nowrap  }
@@ -3582,7 +3583,7 @@ $isStickyNavBar = $sticky_navbar ? 'navbar-fixed' : 'navbar-normal';
         .message.error { border-color:red;color:red  }
         .message.alert { border-color:orange;color:orange  }
         .preview-img { max-width:100%;background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAKklEQVR42mL5//8/Azbw+PFjrOJMDCSCUQ3EABZc4S0rKzsaSvTTABBgAMyfCMsY4B9iAAAAAElFTkSuQmCC)  }
-        .inline-actions > a > i { font-size:1em;margin-left:5px;background:#3785c1;color:#fff;padding:3px;border-radius:3px  }
+        .inline-actions > a > i { font-size:1em;margin-left:5px;background:rgba(255,255,255,0);color:#000;padding:3px;border-radius:3px  }
         .preview-video { position:relative;max-width:100%;height:0;padding-bottom:62.5%;margin-bottom:10px  }
         .preview-video video { position:absolute;width:100%;height:100%;left:0;top:0;background:#000  }
         .compact-table { border:0;width:auto  }
@@ -3665,6 +3666,7 @@ $isStickyNavBar = $sticky_navbar ? 'navbar-fixed' : 'navbar-normal';
         .c-preview-img {
             max-width: 300px;
         }
+        .btn-outline-primary { color: #000; border-style: none; }
     </style>
     <?php
     if (FM_THEME == "dark"): ?>
@@ -3723,7 +3725,7 @@ $isStickyNavBar = $sticky_navbar ? 'navbar-fixed' : 'navbar-normal';
           <div class="modal-header">
             <h5 class="modal-title col-10" id="searchModalLabel">
                 <div class="input-group input-group">
-                    <input type="text" class="form-control" placeholder="<?php echo lng('Search') ?> a files" aria-label="<?php echo lng('Search') ?>" aria-describedby="search-addon3" id="advanced-search" autofocus required>
+                    <input type="text" class="form-control" placeholder="<?php echo lng('Search');echo lng('Files') ?>" aria-label="<?php echo lng('Search') ?>" aria-describedby="search-addon3" id="advanced-search" autofocus required>
                     <div class="input-group-append">
                         <span class="input-group-text" id="search-addon3"><i class="fa fa-search"></i></span>
                     </div>
