@@ -3942,7 +3942,7 @@ $isStickyNavBar = $sticky_navbar ? 'navbar-fixed' : 'navbar-normal';
             var $tr = $('#main-table tr.nosort');
             var mySpecialRow = $tr.prop('outerHTML');
             $tr.remove();
-            mainTable = $('#main-table').DataTable({"paging": false, "info": false, "order": [], "columnDefs": [{"targets": _targets, "orderable": false}], "fnDrawCallback": function(){
+            mainTable = $('#main-table').DataTable({"stateSave": true, "paging": false, "info": false, "order": [], "columnDefs": [{"targets": _targets, "orderable": false}], "fnDrawCallback": function(){
                     $('#main-table tbody').prepend(mySpecialRow);
                 }
         });
