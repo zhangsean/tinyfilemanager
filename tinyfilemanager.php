@@ -1182,7 +1182,7 @@ if (isset($_GET['upload']) && !FM_READONLY) {
     }
     ?>
 
-    <link href="https://cdn.bootcdn.net/ajax/libs/dropzone/5.5.1/min/dropzone.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/dropzone@5.5.1/dist/min/dropzone.min.css" rel="stylesheet">
     <div class="path">
 
         <div class="card mb-2 fm-upload-wrapper <?php echo fm_get_theme(); ?>">
@@ -1222,7 +1222,7 @@ if (isset($_GET['upload']) && !FM_READONLY) {
             </div>
         </div>
     </div>
-    <script src="https://cdn.bootcdn.net/ajax/libs/dropzone/5.5.1/min/dropzone.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dropzone@5.5.1/dist/min/dropzone.min.js"></script>
     <script>
         Dropzone.options.fileUploader = {
             timeout: 120000,
@@ -1678,10 +1678,16 @@ if (isset($_GET['view'])) {
                 }
             } elseif ($is_audio) {
                 // Audio content
-                echo '<p><audio src="' . fm_enc($file_url) . '" controls preload="metadata"></audio></p>';
+                echo '<p><audio id="fm-audio" src="' . fm_enc($file_url) . '" controls preload="metadata"></audio></p>';
+                ?>
+                <script>document.getElementById("fm-audio").volume = 0.3;</script>
+                <?php
             } elseif ($is_video) {
                 // Video content
-                echo '<div class="preview-video"><video src="' . fm_enc($file_url) . '" width="640" height="360" controls preload="metadata"></video></div>';
+                echo '<div class="preview-video"><video id="fm-video" src="' . fm_enc($file_url) . '" width="640" height="360" controls preload="metadata"></video></div>';
+                ?>
+                <script>document.getElementById("fm-video").volume = 0.1;</script>
+                <?php
             } elseif ($is_text) {
                 if (FM_USE_HIGHLIGHTJS) {
                     // highlight
@@ -2112,9 +2118,9 @@ $tableTheme = (FM_THEME == "dark") ? "text-white bg-dark table-dark" : "bg-white
                     <a href="javascript:document.getElementById('a-copy').click();" class="btn btn-small btn-outline-primary btn-2"><i class="fa fa-files-o"></i> <?php echo lng('Copy') ?> </a></li>
             </ul>
         </div>
-        <div class="col-3 d-none d-sm-block"><a href="https://tinyfilemanager.github.io" target="_blank" class="float-right text-muted">Tiny File Manager <?php echo VERSION; ?></a></div>
+        <div class="col-3 d-none d-sm-block"><a href="https://github.com/rampageX/tinyfilemanager" target="_blank" class="float-right text-muted">Tiny File Manager <?php echo VERSION; ?></a></div>
         <?php else: ?>
-            <div class="col-12"><a href="https://tinyfilemanager.github.io" target="_blank" class="float-right text-muted">Tiny File Manager <?php echo VERSION; ?></a></div>
+            <div class="col-12"><a href="https://github.com/rampageX/tinyfilemanager" target="_blank" class="float-right text-muted">Tiny File Manager <?php echo VERSION; ?></a></div>
         <?php endif; ?>
     </div>
 
@@ -3411,6 +3417,7 @@ function fm_show_nav_path($path)
                             <a title="<?php echo lng('Logout') ?>" class="dropdown-item nav-link" href="?logout=1"><i class="fa fa-sign-out" aria-hidden="true"></i> <?php echo lng('Logout') ?></a>
                         </div>
                     </li>
+                    <li class="nav-item" style="margin-top: 8px;"><?php echo lng('Online').": "; online_users(); ?></li>
                     <?php else: ?>
                         <?php if (!FM_READONLY): ?>
                             <li class="nav-item">
@@ -3502,8 +3509,8 @@ global $lang, $root_url, $favicon_path;
     {
     ?>
 </div>
-<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
 </body>
 </html>
 <?php
@@ -3544,9 +3551,9 @@ $isStickyNavBar = $sticky_navbar ? 'navbar-fixed' : 'navbar-normal';
     <title><?php echo fm_enc(APP_TITLE) ?></title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ekko-lightbox@5.3.0/dist/ekko-lightbox.css" />
     <?php if (FM_USE_HIGHLIGHTJS): ?>
-    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/highlight.js/10.6.0/styles/<?php echo FM_HIGHLIGHTJS_STYLE ?>.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.2.0/styles/<?php echo FM_HIGHLIGHTJS_STYLE ?>.min.css">
     <?php endif; ?>
     <style>
         body { font-size:14px;color:#222;background:#F7F7F7; }
@@ -3778,12 +3785,12 @@ $isStickyNavBar = $sticky_navbar ? 'navbar-fixed' : 'navbar-normal';
     {
     ?>
 </div>
-<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
-<script src="https://cdn.bootcdn.net/ajax/libs/datatables/1.10.3/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.bootcdn.net/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/datatables@1.10.18/media/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ekko-lightbox@5.3.0/dist/ekko-lightbox.min.js"></script>
 <?php if (FM_USE_HIGHLIGHTJS): ?>
-    <script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/10.6.0/highlight.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.2.0/build/highlight.min.js"></script>
     <script>hljs.highlightAll(); var isHighlightingEnabled = true;</script>
 <?php endif; ?>
 <script>
@@ -4024,6 +4031,47 @@ $isStickyNavBar = $sticky_navbar ? 'navbar-fixed' : 'navbar-normal';
 </body>
 </html>
 <?php
+}
+
+//在线人数
+function online_users() {
+    $filename='online.txt'; //数据文件
+    $cookiename='FM_OnLineCount'; //Cookie名称
+    $onlinetime=30; //在线有效时间
+    $online=file($filename);
+    $nowtime=$_SERVER['REQUEST_TIME'];
+    $nowonline=array();
+    foreach($online as $line){
+        $row=explode('|',$line);
+        $sesstime=trim($row[1]);
+        if(($nowtime - $sesstime)<=$onlinetime){
+            $nowonline[$row[0]]=$sesstime;
+        }
+    }
+    if(isset($_COOKIE[$cookiename])){
+        $uid=$_COOKIE[$cookiename];
+    }else{
+        $vid=0;
+        do{
+            $vid++;
+            $uid='U'.$vid;
+        }while(array_key_exists($uid,$nowonline));
+        setcookie($cookiename,$uid);
+    }
+    $nowonline[$uid]=$nowtime;
+    $total_online=count($nowonline);
+    if($fp=@fopen($filename,'w')){
+        if(flock($fp,LOCK_EX)){
+            rewind($fp);
+            foreach($nowonline as $fuid=>$ftime){
+                $fline=$fuid.'|'.$ftime."\n";
+                @fputs($fp,$fline);
+            }
+            flock($fp,LOCK_UN);
+            fclose($fp);
+        }
+    }
+    echo "$total_online";
 }
 
 /**
