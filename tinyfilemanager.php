@@ -1614,13 +1614,16 @@ if (isset($_GET['view'])) {
                     }
                     // Text info
                     if ($is_text) {
-                        $is_utf8 = fm_is_utf8($content);
+                        $is_utf8_before = fm_is_utf8($content);
                         if (function_exists('iconv')) {
                             if (!$is_utf8) {
                                 $content = iconv(FM_ICONV_INPUT_ENC, 'UTF-8//IGNORE', $content);
+                                $content = fm_convert_gbk($content);
                             }
                         }
-                        echo 'Charset: ' . ($is_utf8 ? 'utf-8' : '8 bit') . '<br>';
+                        $is_utf8 = fm_is_utf8($content);
+                        echo 'Charset Before: ' . ($is_utf8_before ? 'utf-8' : '8 bit') . '<br>';
+                        echo 'Charset After: ' . ($is_utf8 ? 'utf-8' : '8 bit') . '<br>';
                     }
                     ?>
                 </p>
@@ -1720,6 +1723,7 @@ if (isset($_GET['view'])) {
     }
     exit;
 }
+// End file viewer
 
 // file editor
 if (isset($_GET['edit'])) {
@@ -1763,6 +1767,18 @@ if (isset($_GET['edit'])) {
     if (in_array($ext, fm_get_text_exts()) || substr($mime_type, 0, 4) == 'text' || in_array($mime_type, fm_get_text_mimes())) {
         $is_text = true;
         $content = file_get_contents($file_path);
+        if ($is_text) {
+            $is_utf8_before = fm_is_utf8($content);
+            if (function_exists('iconv')) {
+                if (!$is_utf8) {
+                    $content = iconv(FM_ICONV_INPUT_ENC, 'UTF-8//IGNORE', $content);
+                    $content = fm_convert_gbk($content);
+                }
+            }
+            $is_utf8 = fm_is_utf8($content);
+            echo 'Charset Before: ' . ($is_utf8_before ? 'utf-8' : '8 bit') . '<br>';
+            echo 'Charset After: ' . ($is_utf8 ? 'utf-8' : '8 bit') . '<br>';
+        }
     }
 
     ?>
@@ -1815,6 +1831,7 @@ if (isset($_GET['edit'])) {
     fm_show_footer();
     exit;
 }
+//End file editor
 
 // chmod (not for Windows)
 if (isset($_GET['chmod']) && !FM_READONLY && !FM_IS_WIN) {
@@ -2641,6 +2658,19 @@ function fm_convert_win($filename)
 }
 
 /**
+ * Convert string to GBK
+ * @param string $string
+ * @return string
+ */
+function fm_convert_gbk($string) {
+    if( mb_detect_encoding($string,"UTF-8, ISO-8859-1, GBK")!="UTF-8" ) {
+        return  iconv("gb18030","utf-8",$string);
+    } else {
+        return $string;
+    }
+}
+
+/**
  * @param $obj
  * @return array
  */
@@ -2769,6 +2799,7 @@ function fm_get_file_icon_class($path)
         case 'mpg':
         case 'mpeg':
         case 'mp4':
+        case 'webm':
         case 'm4v':
         case 'flv':
         case 'f4v':
@@ -2947,7 +2978,8 @@ function fm_get_file_mimes($extension)
     $fileTypes['divx'] = 'video/x-msvideo';
 
     $fileTypes['mp3'] = 'audio/mpeg';
-    $fileTypes['mp4'] = 'audio/mpeg';
+    $fileTypes['mp4'] = 'video/mp4';
+    $fileTypes['webm'] = 'video/webm';
     $fileTypes['mpeg'] = 'video/mpeg';
     $fileTypes['mpg'] = 'video/mpeg';
     $fileTypes['mpe'] = 'video/mpeg';
@@ -3417,7 +3449,7 @@ function fm_show_nav_path($path)
                             <a title="<?php echo lng('Logout') ?>" class="dropdown-item nav-link" href="?logout=1"><i class="fa fa-sign-out" aria-hidden="true"></i> <?php echo lng('Logout') ?></a>
                         </div>
                     </li>
-                    <li class="nav-item" style="margin-top: 8px;"><?php echo lng('Online').": "; online_users(); ?></li>
+                    <li class="nav-item" style="margin-top: 8px;"><?php echo lng('Online').": "; echo online_users(); ?></li>
                     <?php else: ?>
                         <?php if (!FM_READONLY): ?>
                             <li class="nav-item">
@@ -3973,7 +4005,7 @@ $isStickyNavBar = $sticky_navbar ? 'navbar-fixed' : 'navbar-normal';
         $ext = "javascript";
         $ext = pathinfo($_GET["edit"], PATHINFO_EXTENSION);
         ?>
-    <script src="https://cdn.bootcdn.net/ajax/libs/ace/1.4.12/ace.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
     <script>
         var editor = ace.edit("editor");
         editor.getSession().setMode( {path:"ace/mode/<?php echo $ext; ?>", inline:true} );
@@ -4033,45 +4065,31 @@ $isStickyNavBar = $sticky_navbar ? 'navbar-fixed' : 'navbar-normal';
 <?php
 }
 
-//在线人数
+//Online Users
 function online_users() {
-    $filename='online.txt'; //数据文件
-    $cookiename='FM_OnLineCount'; //Cookie名称
-    $onlinetime=30; //在线有效时间
-    $online=file($filename);
-    $nowtime=$_SERVER['REQUEST_TIME'];
-    $nowonline=array();
-    foreach($online as $line){
-        $row=explode('|',$line);
-        $sesstime=trim($row[1]);
-        if(($nowtime - $sesstime)<=$onlinetime){
-            $nowonline[$row[0]]=$sesstime;
+    $online_log = 'online.txt';
+    $timeout = 1800;
+    $temp = array();
+
+    if (!file_exists($online_log)) {
+        touch($online_log);
+    }
+    $onlines = file($online_log);
+
+    for ($i=0; $i<count($onlines); $i++) {
+        $online = explode(',', trim($onlines[$i]));
+        if ($online[0] != $_SERVER['REMOTE_ADDR'] && $online[1] > time()) {
+            array_push($temp, $online[0] . ',' . $online[1]);
         }
     }
-    if(isset($_COOKIE[$cookiename])){
-        $uid=$_COOKIE[$cookiename];
-    }else{
-        $vid=0;
-        do{
-            $vid++;
-            $uid='U'.$vid;
-        }while(array_key_exists($uid,$nowonline));
-        setcookie($cookiename,$uid);
-    }
-    $nowonline[$uid]=$nowtime;
-    $total_online=count($nowonline);
-    if($fp=@fopen($filename,'w')){
-        if(flock($fp,LOCK_EX)){
-            rewind($fp);
-            foreach($nowonline as $fuid=>$ftime){
-                $fline=$fuid.'|'.$ftime."\n";
-                @fputs($fp,$fline);
-            }
-            flock($fp,LOCK_UN);
-            fclose($fp);
-        }
-    }
-    echo "$total_online";
+    array_push($temp, $_SERVER['REMOTE_ADDR'] . ',' . (time() + $timeout));
+
+    $onlines = implode("\n", $temp);
+    $fp = fopen($online_log, 'w');
+    fputs($fp, $onlines);
+    fclose($fp);
+
+    return count($temp);
 }
 
 /**
