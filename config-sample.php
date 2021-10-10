@@ -81,7 +81,7 @@ $favicon_path = '';
 
 // Files and folders to excluded from listing
 // e.g. array('myfile.html', 'personal-folder', '*.php', ...)
-$exclude_items = array('');
+$exclude_items = array('lost+found','temp','_header_.md','_header_.html');
 
 // Online office Docs Viewer
 // Availabe rules are 'google', 'microsoft' or false
@@ -95,6 +95,10 @@ $online_viewer = 'google';
 // false => disable sticky header
 $sticky_navbar = true;
 
+// Enable Markdown Header
+// true => parse _header_.md file as header
+// false => parse _header_.html file as header
+$md_header = true;
 
 // max upload file size
 $max_upload_size_bytes = 5000;

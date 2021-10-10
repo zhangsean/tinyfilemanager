@@ -9,7 +9,7 @@ $CONFIG = '{"lang":"zh-CN","error_reporting":false,"show_hidden":false,"hide_Col
  */
 
 //TFM version
-define('VERSION', '2.4.6.CHS');
+define('VERSION', '2.5.0.CHS');
 
 //Application Title
 define('APP_TITLE', 'Tiny File Manager');
@@ -100,6 +100,11 @@ $online_viewer = 'microsoft';
 // false => disable sticky header
 $sticky_navbar = true;
 
+// Enable Markdown Header
+// true => parse _header_.md file as header
+// false => parse _header_.html file as header
+$md_header = true;
+
 // Maximum file upload size
 // Increase the following values in php.ini to work properly
 // memory_limit, upload_max_filesize, post_max_size
@@ -125,6 +130,8 @@ $ip_blacklist = array(
     '0.0.0.0',      // non-routable meta ipv4
     '::'            // non-routable meta ipv6
 );
+
+$time_start = microtime(true);
 
 // if User has the customized config file, try to use it to override the default config above
 $config_file = __DIR__.'/config.php';
@@ -1145,6 +1152,31 @@ $files = array();
 $current_path = array_slice(explode("/",$path), -1)[0];
 if (is_array($objects) && fm_is_exclude_items($current_path)) {
     foreach ($objects as $file) {
+        if ($md_header) {
+            if ($file == '_header_.md') {
+                $mdcontent=file_get_contents($path. '/_header_.md');
+                include('parsedown.php');
+                $Parsedown = new Parsedown();
+                echo "<style>";
+                echo "    .fm-mdc { margin:0 0 0 5px; text-align:center;}";
+                echo "    #fm-md p { margin: 0;}";
+                echo "</style>";
+                echo '<div class="fm-mdc" id="fm-md">';
+                    echo $Parsedown->text($mdcontent);
+                echo "</div>";
+            }
+        } else {
+            if ($file == '_header_.html') {
+                $mdcontent=file_get_contents($path. '/_header_.html');
+                echo "<style>";
+                echo "    .fm-mdc { margin:0 0 0 5px; text-align:center;}";
+                echo "    #fm-md p { margin: 0;}";
+                echo "</style>";
+                echo '<div class="fm-mdc" id="fm-md">';
+                    echo $mdcontent;
+                echo "</div>";
+            }
+        }
         if ($file == '.' || $file == '..') {
             continue;
         }
@@ -2118,6 +2150,8 @@ $tableTheme = (FM_THEME == "dark") ? "text-white bg-dark table-dark" : "bg-white
         </table>
     </div>
 
+        <?php $time_end = microtime(true); $time = $time_end - $time_start; ?>
+
     <div class="row">
         <?php if (!FM_READONLY): ?>
         <div class="col-xs-12 col-sm-9">
@@ -2135,9 +2169,9 @@ $tableTheme = (FM_THEME == "dark") ? "text-white bg-dark table-dark" : "bg-white
                     <a href="javascript:document.getElementById('a-copy').click();" class="btn btn-small btn-outline-primary btn-2"><i class="fa fa-files-o"></i> <?php echo lng('Copy') ?> </a></li>
             </ul>
         </div>
-        <div class="col-3 d-none d-sm-block"><a href="https://github.com/rampageX/tinyfilemanager" target="_blank" class="float-right text-muted">Tiny File Manager <?php echo VERSION; ?></a></div>
+        <div class="col-3 d-none d-sm-block"><a href="https://github.com/rampageX/tinyfilemanager" target="_blank" class="float-right text-muted">Tiny File Manager <?php echo VERSION; ?></a><?php echo "<br /><small style='float: right; color: gray;'>Estimated: " . $time . 's</small>'; ?></div>
         <?php else: ?>
-            <div class="col-12"><a href="https://github.com/rampageX/tinyfilemanager" target="_blank" class="float-right text-muted">Tiny File Manager <?php echo VERSION; ?></a></div>
+            <div class="col-12"><a href="https://github.com/rampageX/tinyfilemanager" target="_blank" class="float-right text-muted">Tiny File Manager <?php echo VERSION; ?></a><?php echo "<br /><small style='float: right; color: gray;'>Estimated: " . $time . 's</small>'; ?></div>
         <?php endif; ?>
     </div>
 
