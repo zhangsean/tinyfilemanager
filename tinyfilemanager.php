@@ -1674,7 +1674,7 @@ if (isset($_GET['view'])) {
                         ?>
                         <b><a href="?p=<?php echo urlencode(trim(FM_PATH)) ?>&amp;edit=<?php echo urlencode($file) ?>" class="edit-file"><i class="fa fa-pencil-square"></i> <?php echo lng('Edit') ?>
                             </a></b> &nbsp;
-                        <b><a href="?p=<?php echo urlencode(trim(FM_PATH)) ?>&amp;edit=<?php echo urlencode($file) ?>&env=ace"
+                        <b><a href="?p=<?php echo urlencode(trim(FM_PATH)) ?>&amp;edit=<?php echo urlencode($file) ?>&env=ace&fullname=<?php echo fm_enc(fm_convert_win($file_path)); ?>"
                               class="edit-file"><i class="fa fa-pencil-square-o"></i> <?php echo lng('AdvancedEditor') ?>
                             </a></b> &nbsp;
                     <?php } ?>
@@ -4028,15 +4028,16 @@ $isStickyNavBar = $sticky_navbar ? 'navbar-fixed' : 'navbar-normal';
     });
 </script>
 <?php if (isset($_GET['edit']) && isset($_GET['env']) && FM_EDIT_FILE):
-        $ext = "javascript";
-        $ext = pathinfo($_GET["edit"], PATHINFO_EXTENSION);
+        $fullName = $_GET['fullname'];
         ?>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.13/ace.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.13/ext-modelist.min.js"></script>
     <script>
         var editor = ace.edit("editor");
-        <?php if ($ext == "bat" || $ext == "cmd") $ext="batchfile"; ?>
-        editor.getSession().setMode( {path:"ace/mode/<?php echo $ext; ?>", inline:true} );
-        //editor.setTheme("ace/theme/twilight"); //Dark Theme
+        var modelist = ace.require("ace/ext/modelist")
+        var filePath = "<?php echo $fullName; ?>"
+        var mode = modelist.getModeForPath(filePath).mode
+        editor.getSession().setMode(mode);
         function ace_commend (cmd) { editor.commands.exec(cmd, editor); }
         editor.commands.addCommands([{
             name: 'save', bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
