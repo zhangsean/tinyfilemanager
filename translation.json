@@ -709,6 +709,8 @@
       "code": "zh-CN",
       "translation": {
         "Advanced Search": "高级搜索",
+        "Online": "在线",
+        "CopyToClipboard": "复制直链到剪贴板",
         "Search file in folder and subfolders...": "在目录和子目录中查找文件...",
         "AppName": "文件管理器",
         "AppTitle": "文件管理器",
