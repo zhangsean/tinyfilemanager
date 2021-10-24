@@ -3612,6 +3612,7 @@ $isStickyNavBar = $sticky_navbar ? 'navbar-fixed' : 'navbar-normal';
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ekko-lightbox@5.3.0/dist/ekko-lightbox.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/datatables@1.10.18/media/css/jquery.dataTables.min.css" />
     <?php if (FM_USE_HIGHLIGHTJS): ?>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.2.0/styles/<?php echo FM_HIGHLIGHTJS_STYLE ?>.min.css" />
     <?php endif; ?>
@@ -4019,7 +4020,7 @@ new ClipboardJS('.ctclip');
             var $tr = $('#main-table tr.nosort');
             var mySpecialRow = $tr.prop('outerHTML');
             $tr.remove();
-            mainTable = $('#main-table').DataTable({"stateSave": true, "paging": false, "info": false, "order": [], "columnDefs": [{"targets": _targets, "orderable": false}], "fnDrawCallback": function(){
+            mainTable = $('#main-table').DataTable({"stateSave": true, "paging": true, "pageLength": 10, "info": true, "order": [[ 2, "desc" ]], "columnDefs": [{"targets": _targets, "orderable": false}], "fnDrawCallback": function(){
                     $('#main-table tbody').prepend(mySpecialRow);
                 }
         });
