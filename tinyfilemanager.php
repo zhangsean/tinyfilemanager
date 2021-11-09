@@ -1,6 +1,6 @@
 <?php
 //Default Configuration
-$CONFIG = '{"lang":"zh-CN","error_reporting":false,"show_hidden":false,"hide_Cols":true,"calc_folder":true,"theme":"light"}';
+$CONFIG = '{"lang":"en","error_reporting":false,"show_hidden":false,"hide_Cols":true,"calc_folder":true,"theme":"light"}';
 
 /**
  * H3K | Tiny File Manager V2.4.6
@@ -2043,7 +2043,7 @@ $tableTheme = (FM_THEME == "dark") ? "text-white bg-dark table-dark" : "bg-white
                             <a title="<?php echo lng('CopyTo')?>..." href="?p=&amp;copy=<?php echo urlencode(trim(FM_PATH . '/' . $f, '/')) ?>"><i class="fa fa-files-o" aria-hidden="true"></i></a>
                         <?php endif; ?>
                         <a title="<?php echo lng('DirectLink')?>" href="<?php echo fm_enc(FM_ROOT_URL . (FM_PATH != '' ? '/' . FM_PATH : '') . '/' . $f . '/') ?>" target="_blank"><i class="fa fa-link" aria-hidden="true"></i></a>
-                        <a class="ctclip" title="<?php echo lng('CopyToClipboard')?>" href="javascript:void(0);" data-clipboard-text="<?php echo fm_enc(FM_ROOT_URL . (FM_PATH != '' ? '/' . FM_PATH : '') . '/' . $f . '/') ?>"><i class="fa fa-clipboard"></i></a>
+                        <a class="ctclip" title="<?php echo lng('CopyDirectLink')?>" href="javascript:void(0);" data-clipboard-text="<?php echo fm_safe_urlencode(fm_enc(FM_ROOT_URL . (FM_PATH != '' ? '/' . FM_PATH : '') . '/' . $f . '/')) ?>"><i class="fa fa-clipboard"></i></a>
                     </td>
                 </tr>
                 <?php
@@ -2107,7 +2107,7 @@ $tableTheme = (FM_THEME == "dark") ? "text-white bg-dark table-dark" : "bg-white
                                href="?p=<?php echo urlencode(FM_PATH) ?>&amp;copy=<?php echo urlencode(trim(FM_PATH . '/' . $f, '/')) ?>"><i class="fa fa-files-o"></i></a>
                         <?php endif; ?>
                         <a title="<?php echo lng('DirectLink') ?>" href="<?php echo fm_enc(FM_ROOT_URL . (FM_PATH != '' ? '/' . FM_PATH : '') . '/' . $f) ?>" target="_blank"><i class="fa fa-link"></i></a>
-						<a class="ctclip" title="<?php echo lng('CopyToClipboard')?>" href="javascript:void(0);" data-clipboard-text="<?php echo fm_enc(FM_ROOT_URL . (FM_PATH != '' ? '/' . FM_PATH : '') . '/' . $f) ?>"><i class="fa fa-clipboard"></i></a>
+						<a class="ctclip" title="<?php echo lng('CopyDirectLink')?>" href="javascript:void(0);" data-clipboard-text="<?php echo fm_safe_urlencode(fm_enc(FM_ROOT_URL . (FM_PATH != '' ? '/' . FM_PATH : '') . '/' . $f)) ?>"><i class="fa fa-clipboard"></i></a>
                         <a title="<?php echo lng('Download') ?>" href="?p=<?php echo urlencode(FM_PATH) ?>&amp;dl=<?php echo urlencode($f) ?>"><i class="fa fa-download"></i></a>
                     </td>
                 </tr>
@@ -2177,6 +2177,20 @@ fm_show_footer();
 //--- END
 
 // Functions
+/**
+ * Safely encode URL UTF-8.
+ * @param string $url
+ * @return string
+ */
+function fm_safe_urlencode($txt){
+  // Skip all URL reserved characters plus dot, dash, underscore and tilde..
+  $result = preg_replace_callback("/[^-\._~:\/\?#\\[\\]@!\$&'\(\)\*\+,;=]+/",
+    function ($match) {
+      // ..and encode the rest!
+      return rawurlencode($match[0]);
+    }, $txt);
+  return ($result);
+}
 
 /**
  * Check if the filename is allowed.
@@ -3657,7 +3671,7 @@ $isStickyNavBar = $sticky_navbar ? 'navbar-fixed' : 'navbar-normal';
         .compact-table { border:0;width:auto  }
         .compact-table td, .compact-table th { width:100px;border:0;text-align:center  }
         .compact-table tr:hover td { background-color:#fff  }
-        .filename { max-width:420px;overflow:hidden;text-overflow:ellipsis  }
+        .filename { max-width:420px;overflow:hidden;text-overflow:ellipsis;font-family:monospace;font-size:16px  }
         .break-word { word-wrap:break-word;margin-left:30px  }
         .break-word.float-left a { color:#7d7d7d  }
         .break-word + .float-right { padding-right:30px;position:relative  }
@@ -4020,7 +4034,7 @@ new ClipboardJS('.ctclip');
             var $tr = $('#main-table tr.nosort');
             var mySpecialRow = $tr.prop('outerHTML');
             $tr.remove();
-            mainTable = $('#main-table').DataTable({"stateSave": true, "paging": true, "pageLength": 10, "info": true, "order": [[ 2, "desc" ]], "columnDefs": [{"targets": _targets, "orderable": false}], "fnDrawCallback": function(){
+            mainTable = $('#main-table').DataTable({"stateSave": true, "paging": true, "pageLength": 25, "info": true, "order": [[ 3, "desc" ]], "columnDefs": [{"targets": _targets, "orderable": false}], "fnDrawCallback": function(){
                     $('#main-table tbody').prepend(mySpecialRow);
                 }
         });
