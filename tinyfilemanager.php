@@ -841,7 +841,10 @@ if (isset($_GET['dl'])) {
     if ($dl != '' && is_file($path . '/' . $dl)) {
         fm_download_file($path . '/' . $dl, $dl, 1024);
         exit;
-    } else {
+    } if ($dl != '' && is_dir($path . '/' . $dl)) {
+		fm_download_dir($path . '/' . $dl, $dl, 1024);
+		}
+    else {
         fm_set_msg(lng('File not found'), 'error');
         fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
     }
@@ -2979,6 +2982,38 @@ function fm_get_file_mimes($extension)
          }
          return $files;
      }
+}
+
+/*
+this will copress as tar.gz and will output.
+* tar and gzip should be installed on the system. 
+* it use as external command
+*/
+
+function fm_download_dir($dirLocation, $dirName, $chunkSize  = 1024)
+{
+	$fieName=$dirName.'.tar.gz';
+	
+	if (connection_status() != 0)
+        return (false);
+	$extension = pathinfo($fileName, PATHINFO_EXTENSION);
+	
+	$contentType = fm_get_file_mimes($extension);
+	header('Content-Type: $contentType');
+	    
+    header('Pragma: no-cache'); 
+    header('Content-Description: Download'); 
+    header("Cache-Control: public");
+    header("Content-Transfer-Encoding: binary\n");
+    header("Content-Disposition: attachment; filename=".$fieName."");
+    
+    header('Content-Type: application/octet-stream');
+
+	header('Content-Transfer-Encoding: binary'); 
+	passthru('/usr/bin/tar -zcf - -C ' . $dirLocation.' .',$err);
+	
+	flush(); //Flushing the buffer
+	exit();
 }
 
 /*

@@ -1,8 +1,8 @@
 # how to build?
 # docker login
 ## .....input your docker id and password
-#docker build . -t tinyfilemanager/tinyfilemanager:master
-#docker push tinyfilemanager/tinyfilemanager:master
+#docker build . -t rcusnir/tinyfilemanager:master
+#docker push rcusnir/tinyfilemanager:master
 
 # how to use?
 # docker run -d -v /absolute/path:/var/www/html/data -p 80:80 --restart=always --name tinyfilemanager tinyfilemanager/tinyfilemanager:master
@@ -13,14 +13,14 @@ FROM php:7.4-cli-alpine
 # RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 
 RUN apk add \
-    libzip-dev \
-    oniguruma-dev
-
-RUN docker-php-ext-install \
-    zip \
+	libzip-dev \
+	oniguruma-dev \
+ && docker-php-ext-install \
     mbstring \
     iconv \
-    fileinfo
+    fileinfo 
+
+RUN mkdir -p /var/www/html/data
 
 WORKDIR /var/www/html
 
