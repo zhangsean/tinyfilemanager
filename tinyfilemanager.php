@@ -2575,9 +2575,11 @@ function fm_get_size($file)
 function fm_get_filesize($size)
 {
     $size = (float) $size;
-    $units = array('&nbsp;B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
+    $units = array('B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
     $power = $size > 0 ? floor(log($size, 1024)) : 0;
-    return sprintf('%s %s', number_format(round($size / pow(1024, $power), 2), $size > 1024 ? 2 : 0), $units[$power]);
+    $power = ($size > 0) ? floor(log($size, 1024)) : 0;
+    $power = ($power > (count($units) - 1)) ? (count($units) - 1) : $power;
+    return sprintf('%s %s', round($size / pow(1024, $power), 2), $units[$power]);
 }
 
 /**
