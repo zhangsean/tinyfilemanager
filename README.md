@@ -1,4 +1,4 @@
-# Tiny File Manager
+# Tiny File Manager FORK - READER_MODE
 
 [![Live demo](https://img.shields.io/badge/Live-Demo-brightgreen.svg?style=flat-square)](https://tinyfilemanager.github.io/demo/)
 [![Live demo](https://img.shields.io/badge/Help-Docs-lightgrey.svg?style=flat-square)](https://github.com/prasathmani/tinyfilemanager/wiki)
@@ -56,13 +56,17 @@ To enable/disable authentication set `$use_auth` to true or false.
 - :file_folder: Exclude folders and files from listing
 - :globe_with_meridians: Multi-language(20+) support and for translations `translation.json` is file required
 - :bangbang: lots more...
+- reader_mode - CSS tweaks and code modifications to improve the quickview/view
+modes to make tinyfilemanager usable to maintain a library of text files.
+Includes a sqlite db to track what has been read, with plans for file tagging
+and a tag cloud
 
 ## Deploy by Docker
 
 Make sure you have **already installed docker**, [Install reference](https://docs.docker.com/engine/install/)
 
 > **Notice:** Your need an absolute path, and it will be served by tinyfilemanager.
-> 
+>
 > If you want to serve this project at **raspberry pi or another special platform**, you can download project and **build image by yourself**.
 
 You can execute this following commands:
