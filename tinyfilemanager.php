@@ -1,6 +1,6 @@
 <?php
 //Default Configuration
-$CONFIG = '{"lang":"en","error_reporting":false,"show_hidden":false,"hide_Cols":false,"calc_folder":false,"theme":"light"}';
+$CONFIG = '{"lang":"en","error_reporting":false,"show_hidden":false,"hide_Cols":false,"calc_folder":true,"theme":"dark"}';
 
 
 /**
@@ -1589,6 +1589,21 @@ if (isset($_GET['help'])) {
     exit;
 }
 
+if ($reader_mode) {
+    if (isset($_GET['markRead'])) {
+    	$story=$_GET['story'];
+    	$read_value=$_GET['markRead'];
+    	$author=$_GET['p'];
+    	$sqlh = sqlite_open($dbfile);
+        $safefile=str_replace("'","''",$story);
+    	$sql = "replace into story_status VALUES('$author','$safefile',$read_value,CURRENT_TIMESTAMP);";
+    	error_log($sql);
+    	$res = sqlite_exec($sqlh,$sql);
+        error_log("SQL return status from $sql" . $res);
+    }
+}	
+
+
 // file viewer
 if (isset($_GET['view'])) {
     $file = $_GET['view'];
@@ -1984,6 +1999,7 @@ $tableTheme = (FM_THEME == "dark") ? "text-white bg-dark table-dark" : "bg-white
                 <?php if (!FM_IS_WIN && !$hide_Cols): ?>
                     <th><?php echo lng('Perms') ?></th>
                     <th><?php echo lng('Owner') ?></th><?php endif; ?>
+                    <?php if ($reader_mode) { echo '<th>'.lng('Status').'</th>'; }?>
                 <th><?php echo lng('Actions') ?></th>
             </tr>
             </thead>
@@ -2101,7 +2117,7 @@ $tableTheme = (FM_THEME == "dark") ? "text-white bg-dark table-dark" : "bg-white
                            <?php else: ?>
                                 <a href="<?php echo $filelink ?>" title="<?php echo $f ?>">
                             <?php endif; ?>
-                                    <i class="<?php echo $img ?>"></i> <?php echo fm_convert_win(fm_enc($f)) ?>
+                                 <i class="<?php echo $img ?>"></i> <?php echo fm_convert_win(fm_enc($f)) ?>
                                 </a>
                                 <?php echo($is_link ? ' &rarr; <i>' . readlink($path . '/' . $f) . '</i>' : '') ?>
                         </div>
@@ -2114,8 +2130,48 @@ $tableTheme = (FM_THEME == "dark") ? "text-white bg-dark table-dark" : "bg-white
                         <td><?php if (!FM_READONLY): ?><a title="<?php echo 'Change Permissions' ?>" href="?p=<?php echo urlencode(FM_PATH) ?>&amp;chmod=<?php echo urlencode($f) ?>"><?php echo $perms ?></a><?php else: ?><?php echo $perms ?><?php endif; ?>
                         </td>
                         <td><?php echo fm_enc($owner['name'] . ':' . $group['name']) ?></td>
-                    <?php endif; ?>
-                    <td class="inline-actions">
+		            <?php endif; ?>
+
+                    <?php
+                    if ($reader_mode):
+                        # GEL - reader 
+                        $p=$_GET['p'];
+                        if ($p != ""):
+                            $safefile=str_replace("'","''",$f); # sqlite embedded single quotes should be doubled
+                            $sqlh = sqlite_open($dbfile);
+                            $sql = "select status,datetime(datestamp,'localtime') as change_date from story_status where author='$p' and title='$safefile';";
+                        	$res = sqlite_query($sqlh,$sql);
+                        	if ($res):
+                        		$row=$res->fetchArray(1);
+                        		if ($row === false) :
+                        			echo "<td>UNREAD</td>";
+                        			$toggle_read=1;
+                        		else :
+                        			$status=$row['status'];
+                        			$change_date=$row['change_date'];
+                        			if ($status == 0) :
+                        				echo "<td>UNREAD</td>";
+                        			    $toggle_read=1;
+                        			else :
+                                        echo "<td>READ on $change_date</td>";
+                                        $toggle_read=0;
+                        			endif;
+                        		endif;
+                        	else :
+                        			echo "<td>UNREAD</td>";
+                        			$toggle_read=1;
+                        	endif;
+                        endif;
+                    endif; // end if reader_mode
+                    ?>
+
+            		    <td class="inline-actions">
+                        <?php 
+                            if ($reader_mode):
+                                # GEL Add a mark read icon/link 
+                                echo "<a title='Mark Read' href='?p=$p&markRead=$toggle_read&story=$f'><i class='fa fa-check'></i></a>";
+                            endif; // end if reader_mode 
+                        ?>
                         <a title="<?php echo lng('Preview') ?>" href="<?php echo $filelink.'&quickView=1'; ?>" data-toggle="lightbox" data-gallery="tiny-gallery" data-title="<?php echo fm_convert_win(fm_enc($f)) ?>" data-max-width="100%" data-width="100%"><i class="fa fa-eye"></i></a>
                         <?php if (!FM_READONLY): ?>
                             <a title="<?php echo lng('Delete') ?>" href="?p=<?php echo urlencode(FM_PATH) ?>&amp;del=<?php echo urlencode($f) ?>" onclick="return confirm('<?php echo lng('Delete').' '.lng('File').'?'; ?>\n \n ( <?php echo urlencode($f) ?> )');"> <i class="fa fa-trash-o"></i></a>
@@ -2125,12 +2181,12 @@ $tableTheme = (FM_THEME == "dark") ? "text-white bg-dark table-dark" : "bg-white
                         <?php endif; ?>
                         <a title="<?php echo lng('DirectLink') ?>" href="<?php echo fm_enc(FM_ROOT_URL . (FM_PATH != '' ? '/' . FM_PATH : '') . '/' . $f) ?>" target="_blank"><i class="fa fa-link"></i></a>
                         <a title="<?php echo lng('Download') ?>" href="?p=<?php echo urlencode(FM_PATH) ?>&amp;dl=<?php echo urlencode($f) ?>"><i class="fa fa-download"></i></a>
-                    </td>
-                </tr>
-                <?php
-                flush();
-                $ik++;
-            }
+            </td>
+        </tr>
+        <?php
+        flush();
+        $ik++;
+        } // end for file
 
             if (empty($folders) && empty($files)) {
                 ?>
@@ -2629,6 +2685,8 @@ function fm_get_zif_info($path, $ext) {
  */
 function fm_enc($text)
 {
+	/** ideas GEL - tweaks for readability - make links from any https:// strings. */
+
     return htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
 }
 
@@ -3611,7 +3669,12 @@ $isStickyNavBar = $sticky_navbar ? 'navbar-fixed' : 'navbar-normal';
         .table-bordered td, .table-bordered th { border:1px solid #f1f1f1; }
         .hidden { display:none  }
         pre.with-hljs { padding:0  }
-        pre.with-hljs code { margin:0;border:0;overflow:visible  }
+        <?php if ($reader_mode) : ?>
+            <!-- GEL CSS tweaks to make things more readable in the quickview/view mode -->
+            pre.with-hljs code { margin:0;border:0;overflow:visible  ; word-wrap:break-word;white-space: -moz-pre-wrap; white-space:pre-wrap;white-space:pre-line;word-break:keep-all;font-size:15px} /*GEL - wrap text within quick view*/
+        <?php else : ?>
+            pre.with-hljs code { margin:0;border:0;overflow:visible  }
+        <?php endif; ?>
         code.maxheight, pre.maxheight { max-height:512px  }
         .fa.fa-caret-right { font-size:1.2em;margin:0 4px;vertical-align:middle;color:#ececec  }
         .fa.fa-home { font-size:1.3em;vertical-align:bottom  }
@@ -3643,6 +3706,7 @@ $isStickyNavBar = $sticky_navbar ? 'navbar-fixed' : 'navbar-normal';
         .btn-2 { border-radius:0;padding:3px 6px;font-size:small; }
         li.file:before,li.folder:before { font:normal normal normal 14px/1 FontAwesome;content:"\f016";margin-right:5px }
         li.folder:before { content:"\f114" }
+        i.fa.fa-read { color:#FFFFFF }
         i.fa.fa-folder-o { color:#0157b3 }
         i.fa.fa-picture-o { color:#26b99a }
         i.fa.fa-file-archive-o { color:#da7d7d }
@@ -4147,5 +4211,38 @@ function lng($txt) {
     else if (isset($tr['en'][$txt])) return fm_enc($tr['en'][$txt]);
     else return "$txt";
 }
+
+    // GEL -- sqlite functions
+
+    function sqlite_open($location) {
+        $handle = new SQLite3($location);
+        $handle->busyTimeout(5000);
+        $handle->exec('PRAGMA journal_mode = wal;');
+        $handle->exec('PRAGMA synchronous = NORMAL;');
+        return $handle;
+    }
+    function sqlite_exec($dbhandle,$query) {
+        $array['dbhandle'] = $dbhandle;
+        $array['query'] = $query;
+        $result = $dbhandle->exec($query);
+        return $result;
+    }
+    function sqlite_query($dbhandle,$query) {
+        $array['dbhandle'] = $dbhandle;
+        $array['query'] = $query;
+        $result = $dbhandle->query($query);
+        return $result;
+    }
+    function sqlite_fetch_array(&$result,$type) {
+        #Get Columns
+        $i = 0;
+        while ($result->columnName($i)) {
+            $columns[ ] = $result->columnName($i);
+            $i++;
+        }
+       
+        $resx = $result->fetchArray(SQLITE3_ASSOC);
+        return $resx;
+    } 
 
 ?>

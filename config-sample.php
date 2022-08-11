@@ -2,7 +2,7 @@
 
 /*
 #################################################################################################################
-This is an OPTIONAL configuration file. rename this file into config.php to use this configuration 
+This is an OPTIONAL configuration file. rename this file into config.php to use this configuration
 The role of this file is to make updating of "tinyfilemanager.php" easier.
 So you can:
 -Feel free to remove completely this file and configure "tinyfilemanager.php" as a single file application.
@@ -120,4 +120,7 @@ $ip_blacklist = array(
     '::'            // non-routable meta ipv6
 );
 
+// GEL - add reader_mode
+$reader_mode=0;
+# $dbfile='/var/www/html/literotica/bookstatus.db';
 ?>
