@@ -23,6 +23,7 @@ WORKDIR /var/www/html
 
 COPY tinyfilemanager.php index.php
 COPY config-sample.php config.php
+COPY translation.json translation.json
 RUN sed -i "s/\$root_path =.*;/\$root_path = \$_SERVER['DOCUMENT_ROOT'].'\/data';/g" config.php && \
     sed -i "s/\$root_url = '';/\$root_url = 'data\/';/g" config.php
     
