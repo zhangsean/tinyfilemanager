@@ -5,22 +5,19 @@
 #docker push tinyfilemanager/tinyfilemanager:master
 
 # how to use?
-# docker run -d -v /absolute/path:/var/www/html/data -p 80:80 --restart=always --name tinyfilemanager tinyfilemanager/tinyfilemanager:master
+# docker run -d -v /absolute/path:/tfm/data -p 80:80 --restart=always --name tfm tinyfilemanager/tinyfilemanager:master
 
-FROM php:7.4-cli-alpine
+FROM php:8-zts-alpine
 
 # if run in China
-# RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 
-RUN apk add \
-    libzip-dev \
-    oniguruma-dev
+RUN apk add --no-cache libzip-dev && \
+    docker-php-ext-install zip
 
-RUN docker-php-ext-install \
-    zip 
-
-WORKDIR /var/www/html
+WORKDIR /tfm
 
 COPY tinyfilemanager.php index.php
+COPY translation.json .
 
 CMD ["sh", "-c", "php -S 0.0.0.0:80"]
