@@ -63,20 +63,20 @@ To enable/disable authentication set `$use_auth` to true or false.
 Make sure you have **already installed docker**, [Install reference](https://docs.docker.com/engine/install/)
 
 > **Notice:** Your need an absolute path, and it will be served by tinyfilemanager.
-> 
+>
 > If you want to serve this project at **raspberry pi or another special platform**, you can download project and **build image by yourself**.
 
 You can execute this following commands:
 
 ```shell
-$ docker run -d -v /absolute/path:/var/www/html/data -p 80:80 --restart=always --name tinyfilemanager tinyfilemanager/tinyfilemanager:master
+$ docker run -d --name tfm -v /absolute/path:/tfm/data -p 80:80 --restart=always -e FM_PSW_ADMIN=admintfm -e FM_PSW_USER=usertfm zhangsean/tinyfilemanager
 $ docker ps
 CONTAINER ID   IMAGE                                COMMAND                  CREATED         STATUS         PORTS                                       NAMES
-648dfba9c0ff   tinyfilemanager/tinyfilemanager:master   "docker-php-entrypoi…"   4 minutes ago   Up 4 minutes   0.0.0.0:80->80/tcp, :::80->80/tcp           tinyfilemanager
+648dfba9c0ff   zhangsean/tinyfilemanager   "docker-php-entrypoi…"   4 minutes ago   Up 4 minutes   0.0.0.0:80->80/tcp, :::80->80/tcp                    tfm
 ```
-Access `http://127.0.0.1/` and enter default username and password, then enjoy it.
+Access `http://127.0.0.1/` and enter username [admin] and password [admintfm], then enjoy it.
 
-DockerHub: [https://hub.docker.com/r/tinyfilemanager/tinyfilemanager](https://hub.docker.com/r/tinyfilemanager/tinyfilemanager)
+DockerHub: [https://hub.docker.com/r/zhangsean/tinyfilemanager](https://hub.docker.com/r/zhangsean/tinyfilemanager)
 
 #### How to change config within docker
 
