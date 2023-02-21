@@ -3,7 +3,7 @@
 $CONFIG = '{"lang":"zh-CN","error_reporting":false,"show_hidden":false,"hide_Cols":false,"theme":"light"}';
 
 /**
- * H3K | Tiny File Manager V2.5.2
+ * H3K | Tiny File Manager V2.5.5
  * @author Prasath Mani | CCP Programmers
  * @email ccpprogrammers@gmail.com
  * @github https://github.com/prasathmani/tinyfilemanager
@@ -11,7 +11,7 @@ $CONFIG = '{"lang":"zh-CN","error_reporting":false,"show_hidden":false,"hide_Col
  */
 
 //TFM version
-define('VERSION', '2.5.2');
+define('VERSION', '2.5.5');
 
 //Application Title
 define('APP_TITLE', 'Tiny File Manager');
