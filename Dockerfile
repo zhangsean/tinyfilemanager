@@ -21,4 +21,11 @@ COPY tinyfilemanager.php index.php
 COPY translation.json .
 COPY icon.png .
 
+ENV FM_ADMIN_PWD=admin@123 \
+    FM_USER_PWD=12345
+
+EXPOSE 80
+
+VOLUME [ "/tfm/data" ]
+
 CMD ["sh", "-c", "php -S 0.0.0.0:80"]
