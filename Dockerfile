@@ -20,6 +20,7 @@ WORKDIR /tfm
 COPY tinyfilemanager.php index.php
 COPY translation.json .
 COPY icon.png .
+COPY info.php .
 
 ENV FM_ADMIN_PWD=admin@123 \
     FM_USER_PWD=12345
