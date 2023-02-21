@@ -19,5 +19,6 @@ WORKDIR /tfm
 
 COPY tinyfilemanager.php index.php
 COPY translation.json .
+COPY icon.png .
 
 CMD ["sh", "-c", "php -S 0.0.0.0:80"]
