@@ -17,7 +17,7 @@ RUN apk add --no-cache libzip-dev && \
 
 WORKDIR /tfm
 
-COPY tinyfilemanager.php index.php
+COPY index.php index.php
 COPY translation.json .
 COPY icon.png .
 COPY info.php .
