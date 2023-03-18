@@ -40,6 +40,8 @@ To enable/disable authentication set `$use_auth` to true or false.
 
 :information_source: Add your own configuration file [config.php](https://tinyfilemanager.github.io/config-sample.txt) in the same folder to use as additional configuration file.
 
+:information_source: To work offline without CDN resources, use [offline](https://github.com/prasathmani/tinyfilemanager/tree/offline) branch
+
 ### :loudspeaker: Features
 
 - :cd: Open Source, light and extremely simple
