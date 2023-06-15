@@ -10,6 +10,8 @@ or
 #################################################################################################################
 */
 
+$CONFIG = '{"lang":"en","error_reporting":false,"show_hidden":false,"hide_Cols":false,"calc_folder":false,"theme":"light","hide_empty_folder":true}';
+
 // Auth with login/password
 // set true/false to enable/disable it
 // Is independent from IP white- and blacklisting
