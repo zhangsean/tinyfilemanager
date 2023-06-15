@@ -1,6 +1,6 @@
 <?php
 //Default Configuration
-$CONFIG = '{"lang":"en","error_reporting":false,"show_hidden":false,"hide_Cols":false,"calc_folder":false,"theme":"light"}';
+$CONFIG = '{"lang":"en","error_reporting":false,"show_hidden":false,"hide_Cols":false,"calc_folder":false,"theme":"light","hide_empty_folder":false}';
 
 /**
  * H3K | Tiny File Manager V2.4.6
@@ -159,6 +159,9 @@ $hide_Cols = isset($cfg->data['hide_Cols']) ? $cfg->data['hide_Cols'] : true;
 
 // Show directory size: true or speedup output: false
 $calc_folder = isset($cfg->data['calc_folder']) ? $cfg->data['calc_folder'] : true;
+
+// Show Empty Folder or hide it
+$hide_empty_folder = isset($cfg->data['hide_empty_folder']) ? $cfg->data['hide_empty_folder'] : true;
 
 // Theme
 $theme = isset($cfg->data['theme']) ? $cfg->data['theme'] : 'light';
@@ -472,7 +475,7 @@ if (isset($_POST['ajax']) && !FM_READONLY) {
 
     // Save Config
     if (isset($_POST['type']) && $_POST['type'] == "settings") {
-        global $cfg, $lang, $report_errors, $show_hidden_files, $lang_list, $hide_Cols, $calc_folder, $theme;
+        global $cfg, $lang, $report_errors, $show_hidden_files, $lang_list, $hide_Cols, $calc_folder, $hide_empty_folder, $theme;
         $newLng = $_POST['js-language'];
         fm_get_translations([]);
         if (!array_key_exists($newLng, $lang_list)) {
@@ -483,6 +486,7 @@ if (isset($_POST['ajax']) && !FM_READONLY) {
         $shf = isset($_POST['js-show-hidden']) && $_POST['js-show-hidden'] == "true" ? true : false;
         $hco = isset($_POST['js-hide-cols']) && $_POST['js-hide-cols'] == "true" ? true : false;
         $caf = isset($_POST['js-calc-folder']) && $_POST['js-calc-folder'] == "true" ? true : false;
+	$hef = isset($_POST['js-hide-empty-folder']) && $_POST['js-hide-empty-folder'] == "true" ? true : false;
         $te3 = $_POST['js-theme-3'];
 
         if ($cfg->data['lang'] != $newLng) {
@@ -508,7 +512,11 @@ if (isset($_POST['ajax']) && !FM_READONLY) {
         if ($cfg->data['calc_folder'] != $caf) {
             $cfg->data['calc_folder'] = $caf;
             $calc_folder = $caf;
-        }
+        }	    
+        if ($cfg->data['hide_empty_folder'] != $hef) {
+            $cfg->data['hide_empty_folder'] = $hef;
+            $hide_empty_folder = $hef;
+        }	    
         if ($cfg->data['theme'] != $te3) {
             $cfg->data['theme'] = $te3;
             $theme = $te3;
@@ -1441,7 +1449,20 @@ if (isset($_GET['settings']) && !FM_READONLY) {
                             </div>
                         </div>
                     </div>
-                    
+                    <div class="form-group row">
+                        <label for="js-hef-1" class="col-sm-3 col-form-label"><?php echo lng('HideEmptyFolder') ?></label>
+                        <div class="col-sm-9">
+                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                <label class="btn btn-secondary <?php echo getChecked($hide_empty_folder, 1, 'active') ?>">
+                                    <input type="radio" name="js-hide-empty-folder" id="js-hef-1" autocomplete="off" value="true" <?php echo getChecked($hide_empty_folder, 1, 'checked') ?> > ON
+                                </label>
+                                <label class="btn btn-secondary <?php echo getChecked($hide_empty_folder, '', 'active') ?>">
+                                    <input type="radio" name="js-hide-empty-folder" id="js-hef-0" autocomplete="off" value="false" <?php echo getChecked($hide_empty_folder, '', 'checked') ?> > OFF
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+	
                     <div class="form-group row">
                         <label for="js-3-1" class="col-sm-3 col-form-label"><?php echo lng('Theme') ?></label>
                         <div class="col-sm-5">
@@ -2417,6 +2438,39 @@ function fm_is_exclude_items($file) {
         return true;
     }
     return false;
+}
+
+/**
+ * Check if directory is empty
+ * @param string $dirpath
+ * @return bool
+ */
+function is_dir_empty($dir) {
+  $handle = opendir($dir);
+  while (false !== ($entry = readdir($handle))) {
+    if ($entry != "." && $entry != "..") {
+      closedir($handle);
+      return false;
+    }
+  }
+  closedir($handle);
+  return true;
+}
+
+/**
+ * Check file is in exclude list
+ * @param string $file
+ * @return bool
+ */
+function fm_is_exclude_items_by_rule($file) {
+    $toExclude = false;
+    if(isset($hide_empty_folder) and true === $hide_empty_folder ) {
+	    if(is_dir($file)){
+	    	is_dir_empty($file);
+		$toExclude = ($toExclude || true)
+	    }
+    }
+    return $toExclude;
 }
 
 /**
