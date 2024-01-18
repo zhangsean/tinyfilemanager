@@ -1,8 +1,9 @@
 # how to build?
 # docker login
 ## .....input your docker id and password
-#docker build . -t rcusnir/tinyfilemanager:master
-#docker push rcusnir/tinyfilemanager:master
+# docker build . -t rcusnir/tinyfilemanager:master
+# docker build . -t rcusnir/tinyfilemanager:develop
+# docker push rcusnir/tinyfilemanager:master
 
 # how to use?
 # docker run -d -v /absolute/path:/var/www/html/data -p 80:80 --restart=always --name tinyfilemanager tinyfilemanager/tinyfilemanager:master
@@ -17,7 +18,7 @@ RUN apk add \
 	oniguruma-dev \
  && docker-php-ext-install \
     mbstring \
-    iconv \
+#    iconv \
     fileinfo 
 
 RUN mkdir -p /var/www/html/data
