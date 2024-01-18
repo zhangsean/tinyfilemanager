@@ -1,0 +1,13 @@
+version: '3'
+services:
+  forPrinting:
+    build: .
+    image: rcusnir/tinyfilemanager:develop
+    ports:
+      - "8000:80"
+#    restart: always
+    volumes:
+#      - /OUC_PSHARE/PRO/bdatos00/icnawdes/icnawdes/Files/pro.ele.nawec/Printer/Invoice:/var/www/html/data
+      - /tmp:/var/www/html/data
+      - ./tinyfilemanager-config.php:/var/www/html/config.php
+      - ./tinyfilemanager.php:/var/www/html/index.php

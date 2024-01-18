@@ -1,6 +1,6 @@
 <?php
 //Default Configuration
-$CONFIG = '{"lang":"en","error_reporting":false,"show_hidden":false,"hide_Cols":false,"calc_folder":false,"theme":"light","hide_empty_folder":false}';
+$CONFIG = '{"lang":"en","error_reporting":false,"show_hidden":false,"hide_Cols":false,"calc_folder":false,"theme":"light","hide_empty_folder":true}';
 
 /**
  * H3K | Tiny File Manager V2.4.6
@@ -161,7 +161,7 @@ $hide_Cols = isset($cfg->data['hide_Cols']) ? $cfg->data['hide_Cols'] : true;
 $calc_folder = isset($cfg->data['calc_folder']) ? $cfg->data['calc_folder'] : true;
 
 // Show Empty Folder or hide it
-$hide_empty_folder = isset($cfg->data['hide_empty_folder']) ? $cfg->data['hide_empty_folder'] : true;
+$hide_empty_folder = isset($cfg->data['hide_empty_folder']) ? $cfg->data['hide_empty_folder'] : false;
 
 // Theme
 $theme = isset($cfg->data['theme']) ? $cfg->data['theme'] : 'light';
@@ -486,7 +486,7 @@ if (isset($_POST['ajax']) && !FM_READONLY) {
         $shf = isset($_POST['js-show-hidden']) && $_POST['js-show-hidden'] == "true" ? true : false;
         $hco = isset($_POST['js-hide-cols']) && $_POST['js-hide-cols'] == "true" ? true : false;
         $caf = isset($_POST['js-calc-folder']) && $_POST['js-calc-folder'] == "true" ? true : false;
-	$hef = isset($_POST['js-hide-empty-folder']) && $_POST['js-hide-empty-folder'] == "true" ? true : false;
+	    $hef = isset($_POST['js-hide-empty-folder']) && $_POST['js-hide-empty-folder'] == "true" ? true : false;
         $te3 = $_POST['js-theme-3'];
 
         if ($cfg->data['lang'] != $newLng) {
@@ -516,7 +516,7 @@ if (isset($_POST['ajax']) && !FM_READONLY) {
         if ($cfg->data['hide_empty_folder'] != $hef) {
             $cfg->data['hide_empty_folder'] = $hef;
             $hide_empty_folder = $hef;
-        }	    
+        }	            
         if ($cfg->data['theme'] != $te3) {
             $cfg->data['theme'] = $te3;
             $theme = $te3;
@@ -1165,8 +1165,10 @@ if (is_array($objects) && fm_is_exclude_items($current_path)) {
         $new_path = $path . '/' . $file;
         if (@is_file($new_path) && fm_is_exclude_items($file)) {
             $files[] = $file;
-        } elseif (@is_dir($new_path) && $file != '.' && $file != '..' && fm_is_exclude_items($file)) {
-            $folders[] = $file;
+        } elseif (@is_dir($new_path) && $file != '.' && $file != '..' && fm_is_exclude_items($file)) {            
+            if(fm_is_exclude_dir_empty($new_path)){
+                $folders[] = $file;
+            }
         }
     }
 }
@@ -2462,15 +2464,19 @@ function is_dir_empty($dir) {
  * @param string $file
  * @return bool
  */
-function fm_is_exclude_items_by_rule($file) {
-    $toExclude = false;
-    if(isset($hide_empty_folder) and true === $hide_empty_folder ) {
-	    if(is_dir($file)){
-	    	is_dir_empty($file);
-		$toExclude = ($toExclude || true)
+function fm_is_exclude_dir_empty($filePath) {
+    global $hide_empty_folder;
+
+    $toShowEmptyFolder = true;
+        
+    if(isset($hide_empty_folder) and true === $hide_empty_folder ) {        
+        //echo "<p>hide_empty_folder==true"."</p>";
+	    if(is_dir($filePath)){	    	
+          if(is_dir_empty($filePath))
+            $toShowEmptyFolder = false;
 	    }
     }
-    return $toExclude;
+    return $toShowEmptyFolder;
 }
 
 /**
