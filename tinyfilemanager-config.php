@@ -54,6 +54,9 @@ $root_path = $_SERVER['DOCUMENT_ROOT'].'/data';
 // Will not working if $root_path will be outside of server document root
 $root_url = 'data/';
 
+#Application context/location, when it is deployed behind reverse proxy
+$appContext='';
+
 // Server hostname. Can set manually if wrong
 $http_host = $_SERVER['HTTP_HOST'];
 

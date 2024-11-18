@@ -57,6 +57,9 @@ $root_path = $_SERVER['DOCUMENT_ROOT'];
 // Will not working if $root_path will be outside of server document root
 $root_url = '';
 
+#Application context/location, when it is deployed behind reverse proxy
+$appContext='';
+
 // Server hostname. Can set manually if wrong
 $http_host = $_SERVER['HTTP_HOST'];
 
@@ -230,7 +233,7 @@ $root_url = fm_clean_path($root_url);
 
 // abs path for site
 defined('FM_ROOT_URL') || define('FM_ROOT_URL', ($is_https ? 'https' : 'http') . '://' . $http_host . (!empty($root_url) ? '/' . $root_url : ''));
-defined('FM_SELF_URL') || define('FM_SELF_URL', ($is_https ? 'https' : 'http') . '://' . $http_host . $_SERVER['PHP_SELF']);
+defined('FM_SELF_URL') || define('FM_SELF_URL', ($is_https ? 'https' : 'http') . '://' . $http_host . $appContext . $_SERVER['PHP_SELF']);
 
 // logout
 if (isset($_GET['logout'])) {
